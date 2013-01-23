@@ -24,19 +24,29 @@ using Microsoft.Phone.Tasks;
 
 namespace MusicExplorer
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class MusicApi
     {
-        private MusicClient client;
+        // Members
+        private MusicClient client =  null;
+        private Collection<Artist> localArtists = new Collection<Artist>();
         private bool initialized = false;
+        private int localAudioResponses = 0;
+        private int recommendResponses = 0;
 
-        int LocalAudioResponses = 0;
-        int RecommendResponses = 0;
-        Collection<Artist> LocalArtists = new Collection<Artist>();
-
+        /// <summary>
+        /// 
+        /// </summary>
         public MusicApi()
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="countryCode"></param>
         public void Initialize(string countryCode)
         {
             // Create a music client with correct AppId and Token/AppCode
@@ -44,11 +54,17 @@ namespace MusicExplorer
             initialized = true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void GetArtistInfoForLocalAudio()
         {
-            if (!initialized || LocalAudioResponses >= App.ViewModel.LocalAudio.Count) return;
+            if (!initialized || localAudioResponses >= App.ViewModel.LocalAudio.Count)
+            {
+                return;
+            }
 
-            ArtistViewModel m = App.ViewModel.LocalAudio[LocalAudioResponses];
+            ArtistViewModel m = App.ViewModel.LocalAudio[localAudioResponses];
 
             client.SearchArtists((ListResponse<Artist> response) =>
             {
@@ -60,6 +76,7 @@ namespace MusicExplorer
                         m.Id = response.Result[0].Id;
                         m.Country = response.Result[0].Country;
                         int itemHeight = Int32.Parse(m.ProportionalHeight);
+
                         if (response.Result[0].Thumb200Uri != null && itemHeight > 100)
                         {
                             m.ThumbUri = response.Result[0].Thumb200Uri;
@@ -72,23 +89,31 @@ namespace MusicExplorer
                         {
                             m.ThumbUri = new Uri("/Assets/thumb_100_placeholder.png", UriKind.Relative);
                         }
-                        LocalArtists.Add(response.Result[0]);
+
+                        localArtists.Add(response.Result[0]);
                     }
 
-                    LocalAudioResponses++;
+                    localAudioResponses++;
                     GetArtistInfoForLocalAudio();
-                    if (LocalAudioResponses == App.ViewModel.LocalAudio.Count)
+
+                    if (localAudioResponses == App.ViewModel.LocalAudio.Count)
                     {
-                        // request recommendations after receiving info for all local artists
+                        // Request recommendations after receiving info for all local artists
                         FetchRecommendations();
                     }
                 });
             }, m.Name);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void FetchRecommendations()
         {
-            if (!initialized || LocalArtists.Count <= RecommendResponses) return;
+            if (!initialized || localArtists.Count <= recommendResponses)
+            {
+                return;
+            }
 
             client.GetSimilarArtists((ListResponse<Artist> response) =>
             {
@@ -104,11 +129,16 @@ namespace MusicExplorer
                             // don't recommend artists already stored in device
                             foreach (ArtistViewModel localArtist in App.ViewModel.LocalAudio)
                             {
-                                if (localArtist.Name == a.Name) handled = true;
+                                if (localArtist.Name == a.Name)
+                                {
+                                    handled = true;
+                                }
+
                                 break;
                             }
 
-                            // check if the artist has already been recommended -> add some weight to recommendation.
+                            // Check if the artist has already been recommended -> add some weight
+                            // to recommendation.
                             if (!handled)
                             {
                                 for (int i = 0; i < App.ViewModel.Recommendations.Count; i++)
@@ -121,12 +151,14 @@ namespace MusicExplorer
                                         // position according to count
                                         if (i > 0)
                                         {
-                                            int j;
+                                            int j = 0;
+
                                             for (j = i - 1; j > 0; j--)
                                             {
-                                                if (App.ViewModel.Recommendations[j].SimilarArtistCount >= App.ViewModel.Recommendations[i].SimilarArtistCount)
+                                                if (App.ViewModel.Recommendations[j].SimilarArtistCount >=
+                                                    App.ViewModel.Recommendations[i].SimilarArtistCount)
                                                 {
-                                                    j++; // this item (j) has been ranked higher or equal - correct index is one more
+                                                    j++; // This item (j) has been ranked higher or equal - correct index is one more
                                                     break;
                                                 }
                                             }
@@ -143,30 +175,55 @@ namespace MusicExplorer
                                 }
                             }
 
-                            // if the artist is not present in the device and has not yet been recommended, do it now.
+                            // If the artist is not present in the device and has not yet been
+                            // recommended, do it now.
                             if (!handled)
                             {
                                 if (a.Thumb100Uri != null)
                                 {
-                                    App.ViewModel.Recommendations.Add(new ArtistViewModel() { Name = a.Name, Country = a.Country, Genres = a.Genres[0].Name, ThumbUri = a.Thumb100Uri, Id = a.Id, SimilarArtistCount = 1 });
+                                    App.ViewModel.Recommendations.Add(new ArtistViewModel()
+                                        {
+                                            Name = a.Name,
+                                            Country = a.Country,
+                                            Genres = a.Genres[0].Name,
+                                            ThumbUri = a.Thumb100Uri,
+                                            Id = a.Id,
+                                            SimilarArtistCount = 1
+                                        });
                                 }
                                 else
                                 {
-                                    App.ViewModel.Recommendations.Add(new ArtistViewModel() { Name = a.Name, Country = a.Country, Genres = a.Genres[0].Name, ThumbUri = new Uri("/Assets/thumb_100_placeholder.png", UriKind.Relative), Id = a.Id, SimilarArtistCount = 1 });
+                                    App.ViewModel.Recommendations.Add(new ArtistViewModel()
+                                        {
+                                            Name = a.Name,
+                                            Country = a.Country,
+                                            Genres = a.Genres[0].Name,
+                                            ThumbUri = new Uri("/Assets/thumb_100_placeholder.png",
+                                                               UriKind.Relative),
+                                            Id = a.Id,
+                                            SimilarArtistCount = 1
+                                        });
                                 }
                             }
                         }
                     }
 
-                    RecommendResponses++;
+                    recommendResponses++;
                     FetchRecommendations();
                 });
-            }, LocalArtists[RecommendResponses].Id);
+            }, localArtists[recommendResponses].Id);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void GetTopArtists()
         {
-            if (!initialized) return;
+            if (!initialized)
+            {
+                return;
+            }
+
             client.GetTopArtists((ListResponse<Artist> response) =>
             {
                 Deployment.Current.Dispatcher.BeginInvoke(() =>
@@ -175,15 +232,31 @@ namespace MusicExplorer
                     if (response != null && response.Result != null && response.Result.Count > 0)
                     {
                         App.ViewModel.TopArtists.Clear();
+
                         foreach (Artist a in response.Result)
                         {
                             if (a.Thumb100Uri != null)
                             {
-                                App.ViewModel.TopArtists.Add(new ArtistViewModel() { Name = a.Name, Country = a.Country, Genres = a.Genres[0].Name, ThumbUri = a.Thumb100Uri, Id = a.Id });
+                                App.ViewModel.TopArtists.Add(new ArtistViewModel()
+                                    {
+                                        Name = a.Name,
+                                        Country = a.Country,
+                                        Genres = a.Genres[0].Name,
+                                        ThumbUri = a.Thumb100Uri,
+                                        Id = a.Id
+                                    });
                             }
                             else
                             {
-                                App.ViewModel.TopArtists.Add(new ArtistViewModel() { Name = a.Name, Country = a.Country, Genres = a.Genres[0].Name, ThumbUri = new Uri("/Assets/thumb_100_placeholder.png", UriKind.Relative), Id = a.Id });
+                                App.ViewModel.TopArtists.Add(new ArtistViewModel()
+                                    {
+                                        Name = a.Name,
+                                        Country = a.Country,
+                                        Genres = a.Genres[0].Name,
+                                        ThumbUri = new Uri("/Assets/thumb_100_placeholder.png",
+                                                           UriKind.Relative),
+                                        Id = a.Id
+                                    });
                             }
                         }
                     }
@@ -191,9 +264,16 @@ namespace MusicExplorer
             });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void GetNewReleases()
         {
-            if (!initialized) return;
+            if (!initialized)
+            {
+                return;
+            }
+
             client.GetNewReleases((ListResponse<Product> response) =>
             {
                 Deployment.Current.Dispatcher.BeginInvoke(() =>
@@ -206,6 +286,7 @@ namespace MusicExplorer
                         foreach (Product p in response.Result)
                         {
                             string categoryString = "Album";
+
                             if (p.Category == Category.Single)
                             {
                                 categoryString = "Track";
@@ -216,15 +297,34 @@ namespace MusicExplorer
                             }
 
                             string performersString = "";
-                            if (p.Performers != null && p.Performers.Length > 0) performersString = p.Performers[0].Name;
+
+                            if (p.Performers != null && p.Performers.Length > 0)
+                            {
+                                performersString = p.Performers[0].Name;
+                            }
 
                             if (p.Thumb100Uri != null)
                             {
-                                App.ViewModel.NewReleases.Add(new ProductViewModel() { Performers = performersString, Name = p.Name, Category = categoryString, ThumbUri = p.Thumb100Uri, Id = p.Id });
+                                App.ViewModel.NewReleases.Add(new ProductViewModel()
+                                    {
+                                        Performers = performersString,
+                                        Name = p.Name,
+                                        Category = categoryString,
+                                        ThumbUri = p.Thumb100Uri,
+                                        Id = p.Id
+                                    });
                             }
                             else
                             {
-                                App.ViewModel.NewReleases.Add(new ProductViewModel() { Performers = performersString, Name = p.Name, Category = categoryString, ThumbUri = new Uri("/Assets/thumb_100_placeholder.png", UriKind.Relative), Id = p.Id });
+                                App.ViewModel.NewReleases.Add(new ProductViewModel()
+                                    {
+                                        Performers = performersString,
+                                        Name = p.Name,
+                                        Category = categoryString,
+                                        ThumbUri = new Uri("/Assets/thumb_100_placeholder.png",
+                                                           UriKind.Relative),
+                                        Id = p.Id
+                                    });
                             }
                         }
                     }
@@ -232,9 +332,16 @@ namespace MusicExplorer
             }, Category.Album);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void GetGenres()
         {
-            if (!initialized) return;
+            if (!initialized)
+            {
+                return;
+            }
+
             client.GetGenres((ListResponse<Genre> response) =>
             {
                 Deployment.Current.Dispatcher.BeginInvoke(() =>
@@ -244,18 +351,31 @@ namespace MusicExplorer
                     {
                         int genreCount = response.Count();
                         App.ViewModel.Genres.Clear();
+
                         foreach (Genre g in response.Result)
                         {
-                            App.ViewModel.Genres.Add(new GenreViewModel() { Name = g.Name, Id = g.Id });
+                            App.ViewModel.Genres.Add(new GenreViewModel()
+                                {
+                                    Name = g.Name,
+                                    Id = g.Id
+                                });
                         }
                     }
                 });
             });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
         public void GetTopArtistsForGenre(string id)
         {
-            if (!initialized) return;
+            if (!initialized)
+            {
+                return;
+            }
+
             client.GetTopArtistsForGenre((ListResponse<Artist> response) =>
             {
                 Deployment.Current.Dispatcher.BeginInvoke(() =>
@@ -264,15 +384,31 @@ namespace MusicExplorer
                     if (response != null && response.Result != null && response.Result.Count > 0)
                     {
                         App.ViewModel.TopArtistsForGenre.Clear();
+
                         foreach (Artist a in response.Result)
                         {
                             if (a.Thumb100Uri != null)
                             {
-                                App.ViewModel.TopArtistsForGenre.Add(new ArtistViewModel() { Name = a.Name, Country = a.Country, Genres = a.Genres[0].Name, ThumbUri = a.Thumb100Uri, Id = a.Id });
+                                App.ViewModel.TopArtistsForGenre.Add(new ArtistViewModel()
+                                    {
+                                        Name = a.Name,
+                                        Country = a.Country,
+                                        Genres = a.Genres[0].Name,
+                                        ThumbUri = a.Thumb100Uri,
+                                        Id = a.Id
+                                    });
                             }
                             else
                             {
-                                App.ViewModel.TopArtistsForGenre.Add(new ArtistViewModel() { Name = a.Name, Country = a.Country, Genres = a.Genres[0].Name, ThumbUri = new Uri("/Assets/thumb_100_placeholder.png", UriKind.Relative), Id = a.Id });
+                                App.ViewModel.TopArtistsForGenre.Add(new ArtistViewModel()
+                                    {
+                                        Name = a.Name,
+                                        Country = a.Country,
+                                        Genres = a.Genres[0].Name,
+                                        ThumbUri = new Uri("/Assets/thumb_100_placeholder.png",
+                                                           UriKind.Relative),
+                                        Id = a.Id
+                                    });
                             }
                         }
                     }
@@ -280,9 +416,16 @@ namespace MusicExplorer
             }, id);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void GetMixGroups()
         {
-            if (!initialized) return;
+            if (!initialized)
+            {
+                return;
+            }
+
             client.GetMixGroups((ListResponse<MixGroup> response) =>
             {
                 Deployment.Current.Dispatcher.BeginInvoke(() =>
@@ -291,18 +434,31 @@ namespace MusicExplorer
                     if (response != null && response.Result != null && response.Result.Count > 0)
                     {
                         App.ViewModel.MixGroups.Clear();
+
                         foreach (MixGroup mg in response.Result)
                         {
-                            App.ViewModel.MixGroups.Add(new MixGroupViewModel() { Name = mg.Name, Id = mg.Id });
+                            App.ViewModel.MixGroups.Add(new MixGroupViewModel()
+                                {
+                                    Name = mg.Name,
+                                    Id = mg.Id
+                                });
                         }
                     }
                 });
             });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
         public void GetMixes(string id)
         {
-            if (!initialized) return;
+            if (!initialized)
+            {
+                return;
+            }
+
             client.GetMixes((ListResponse<Mix> response) =>
             {
                 Deployment.Current.Dispatcher.BeginInvoke(() =>
@@ -311,20 +467,40 @@ namespace MusicExplorer
                     if (response != null && response.Result != null && response.Result.Count > 0)
                     {
                         App.ViewModel.Mixes.Clear();
+
                         foreach (Mix m in response.Result)
                         {
                             string parentalAdvisoryString = "";
-                            if (m.ParentalAdvisory) parentalAdvisoryString = "Parental advisory";
-                            App.ViewModel.Mixes.Add(new MixViewModel() { Name = m.Name, ParentalAdvisory = parentalAdvisoryString, Id = m.Id, ThumbUri = m.Thumb100Uri });
+
+                            if (m.ParentalAdvisory)
+                            {
+                                parentalAdvisoryString = "Parental advisory";
+                            }
+
+                            App.ViewModel.Mixes.Add(new MixViewModel()
+                                {
+                                    Name = m.Name,
+                                    ParentalAdvisory = parentalAdvisoryString,
+                                    Id = m.Id,
+                                    ThumbUri = m.Thumb100Uri
+                                });
                         }
                     }
                 });
             }, id);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
         public void GetProductsForArtist(string id)
         {
-            if (!initialized) return;
+            if (!initialized)
+            {
+                return;
+            }
+
             client.GetArtistProducts((ListResponse<Product> response) =>
             {
                 Deployment.Current.Dispatcher.BeginInvoke(() =>
@@ -339,41 +515,81 @@ namespace MusicExplorer
                         foreach (Product p in response.Result)
                         {
                             string priceString = "";
-                            if (p.Price != null) priceString = p.Price.Value + p.Price.Currency;
+
+                            if (p.Price != null)
+                            {
+                                priceString = p.Price.Value + p.Price.Currency;
+                            }
 
                             string takenFromString = "";
-                            if (p.TakenFrom != null) takenFromString = p.TakenFrom.Name;
+
+                            if (p.TakenFrom != null)
+                            {
+                                takenFromString = p.TakenFrom.Name;
+                            }
 
                             string performersString = "";
-                            if (p.Performers != null && p.Performers.Length > 0) performersString = p.Performers[0].Name;
+
+                            if (p.Performers != null && p.Performers.Length > 0)
+                            {
+                                performersString = p.Performers[0].Name;
+                            }
 
                             string genresString = "";
-                            if (p.Genres != null && p.Genres.Length > 0) genresString = p.Genres[0].Name;
+
+                            if (p.Genres != null && p.Genres.Length > 0)
+                            {
+                                genresString = p.Genres[0].Name;
+                            }
 
                             Uri thumbUri;
+
                             if (p.Thumb100Uri != null)
                             {
                                 thumbUri = p.Thumb100Uri;
                             }
                             else
                             {
-                                thumbUri = new Uri("/Assets/thumb_100_placeholder.png", UriKind.Relative);
+                                thumbUri = new Uri("/Assets/thumb_100_placeholder.png",
+                                                   UriKind.Relative);
                             }
 
                             string categoryString = "Album";
+
                             if (p.Category == Category.Track)
                             {
                                 categoryString = "Track";
-                                App.ViewModel.TracksForArtist.Add(new ProductViewModel() { Performers = performersString, Name = p.Name, Category = categoryString, ThumbUri = thumbUri, Id = p.Id });
+                                App.ViewModel.TracksForArtist.Add(new ProductViewModel()
+                                    {
+                                        Performers = performersString,
+                                        Name = p.Name,
+                                        Category = categoryString,
+                                        ThumbUri = thumbUri,
+                                        Id = p.Id
+                                    });
                             }
                             else if (p.Category == Category.Single)
                             {
                                 categoryString = "Single";
-                                App.ViewModel.SinglesForArtist.Add(new ProductViewModel() { Performers = performersString, Name = p.Name, Category = categoryString, ThumbUri = thumbUri, Id = p.Id });
+                                App.ViewModel.SinglesForArtist.Add(new ProductViewModel()
+                                    {
+                                        Performers = performersString,
+                                        Name = p.Name,
+                                        Category = categoryString,
+                                        ThumbUri = thumbUri,
+                                        Id = p.Id
+                                    });
                             }
                             else
                             {
-                                App.ViewModel.AlbumsForArtist.Add(new ProductViewModel() { Performers = performersString, Name = p.Name, Category = categoryString, ThumbUri = thumbUri, Id = p.Id });
+                                App.ViewModel.AlbumsForArtist.Add(new ProductViewModel()
+                                    {
+                                        Performers = performersString,
+                                        Name = p.Name,
+                                        Category = categoryString,
+                                        ThumbUri = thumbUri,
+                                        Id = p.Id
+                                    });
                             }
                         }
                     }
@@ -381,9 +597,17 @@ namespace MusicExplorer
             }, id);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
         public void GetSimilarArtists(string id)
         {
-            if (!initialized) return;
+            if (!initialized)
+            {
+                return;
+            }
+
             client.GetSimilarArtists((ListResponse<Artist> response) =>
             {
                 Deployment.Current.Dispatcher.BeginInvoke(() =>
@@ -392,15 +616,31 @@ namespace MusicExplorer
                     if (response != null && response.Result != null && response.Result.Count > 0)
                     {
                         App.ViewModel.SimilarForArtist.Clear();
+
                         foreach (Artist a in response.Result)
                         {
                             if (a.Thumb100Uri != null)
                             {
-                                App.ViewModel.SimilarForArtist.Add(new ArtistViewModel() { Name = a.Name, Country = a.Country, Genres = a.Genres[0].Name, ThumbUri = a.Thumb100Uri, Id = a.Id });
+                                App.ViewModel.SimilarForArtist.Add(new ArtistViewModel()
+                                    {
+                                        Name = a.Name,
+                                        Country = a.Country,
+                                        Genres = a.Genres[0].Name,
+                                        ThumbUri = a.Thumb100Uri,
+                                        Id = a.Id
+                                    });
                             }
                             else
                             {
-                                App.ViewModel.SimilarForArtist.Add(new ArtistViewModel() { Name = a.Name, Country = a.Country, Genres = a.Genres[0].Name, ThumbUri = new Uri("/Assets/thumb_100_placeholder.png", UriKind.Relative), Id = a.Id });
+                                App.ViewModel.SimilarForArtist.Add(new ArtistViewModel()
+                                    {
+                                        Name = a.Name,
+                                        Country = a.Country,
+                                        Genres = a.Genres[0].Name,
+                                        ThumbUri = new Uri("/Assets/thumb_100_placeholder.png",
+                                                           UriKind.Relative),
+                                        Id = a.Id
+                                    });
                             }
                         }
                     }
@@ -408,22 +648,42 @@ namespace MusicExplorer
             }, id);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
         public void LaunchMix(string id)
         {
-            if (!initialized) return;
+            if (!initialized)
+            {
+                return;
+            }
+
             PlayMixTask task = new PlayMixTask();
             task.MixId = id;
             task.Show();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="artistName"></param>
         public void LaunchArtistMix(string artistName)
         {
-            if (!initialized) return;
+            if (!initialized)
+            {
+                return;
+            }
+
             PlayMixTask task = new PlayMixTask();
             task.ArtistName = artistName;
             task.Show();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
         public void LaunchProduct(string id)
         {
             ShowProductTask task = new ShowProductTask();
@@ -431,17 +691,31 @@ namespace MusicExplorer
             task.Show();
         } 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
         public void LaunchArtist(string id)
         {
-            if (!initialized) return;
+            if (!initialized)
+            {
+                return;
+            }
+
             ShowArtistTask task = new ShowArtistTask();
             task.ArtistId = id;
             task.Show();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="localArtistName"></param>
         public void PlayLocalArtist(string localArtistName)
         {
-            Microsoft.Xna.Framework.Media.MediaLibrary lib = new Microsoft.Xna.Framework.Media.MediaLibrary();
+            Microsoft.Xna.Framework.Media.MediaLibrary lib =
+                new Microsoft.Xna.Framework.Media.MediaLibrary();
+
             for (int i = 0; i < lib.Artists.Count; i++)
             {
                 if (localArtistName == lib.Artists[i].Name)
@@ -453,6 +727,5 @@ namespace MusicExplorer
                 }
             }
         }
-
     }
 }
