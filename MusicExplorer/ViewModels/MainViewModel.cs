@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2012 Nokia Corporation. All rights reserved.
+ * Copyright © 2013 Nokia Corporation. All rights reserved.
  * Nokia and Nokia Connecting People are registered trademarks of Nokia Corporation. 
  * Other product and company names mentioned herein may be trademarks
  * or trade names of their respective owners. 
@@ -14,6 +14,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace MusicExplorer.ViewModels
 {
@@ -37,7 +38,10 @@ namespace MusicExplorer.ViewModels
             this._selectedGenre = "";
 
             // Insert a place holder for title text
-            this.LocalAudio.Add(new ArtistViewModel() { Name = "MusicExplorerTitlePlaceholder", ProportionalHeight = "100", ProportionalWidth = "400" });
+            this.LocalAudio.Add(new ArtistViewModel() { Name = "MusicExplorerTitlePlaceholder", ProportionalHeight = "110", ProportionalWidth = "400" });
+
+            // Enable flipping of favourites items after launch
+            this.FlipFavourites = true;
         }
 
         /// <summary>
@@ -100,6 +104,11 @@ namespace MusicExplorer.ViewModels
         /// </summary>
         public ObservableCollection<MixViewModel> Mixes { get; private set; }
 
+        /// <summary>
+        /// Medialibrary for accessing local artists and songs.
+        /// </summary>
+        MediaLibrary mediaLib = null;
+
         private ArtistViewModel _selectedArtist;
         /// <summary>
         /// Sample ViewModel property; this property is used in the view to display its value using a Binding
@@ -142,6 +151,153 @@ namespace MusicExplorer.ViewModels
             }
         }
 
+        private string _progressIndicatorText;
+        /// <summary>
+        /// <TODO>MainViewModel's SelectedGenre property; this property is used in the TopArtistsForGenre page to display its value using a Binding
+        /// </summary>
+        /// <returns></returns>
+        public string ProgressIndicatorText
+        {
+            get
+            {
+                return _progressIndicatorText;
+            }
+            set
+            {
+                if (value != _progressIndicatorText)
+                {
+                    _progressIndicatorText = value;
+                    NotifyPropertyChanged("ProgressIndicatorText");
+                }
+            }
+        }
+
+        private bool _progressIndicatorVisible;
+        /// <summary>
+        /// <TODO>MainViewModel's SelectedGenre property; this property is used in the TopArtistsForGenre page to display its value using a Binding
+        /// </summary>
+        /// <returns></returns>
+        public bool ProgressIndicatorVisible
+        {
+            get
+            {
+                return _progressIndicatorVisible;
+            }
+            set
+            {
+                if (value != _progressIndicatorVisible)
+                {
+                    _progressIndicatorVisible = value;
+                    NotifyPropertyChanged("ProgressIndicatorVisible");
+                }
+            }
+        }
+
+        private bool _flipFavourites;
+        /// <summary>
+        /// <TODO>MainViewModel's SelectedGenre property; this property is used in the TopArtistsForGenre page to display its value using a Binding
+        /// </summary>
+        /// <returns></returns>
+        public bool FlipFavourites
+        {
+            get
+            {
+                return _flipFavourites;
+            }
+            set
+            {
+                if (value != _flipFavourites)
+                {
+                    _flipFavourites = value;
+                    NotifyPropertyChanged("FlipFavourites");
+                }
+            }
+        }
+
+        private Visibility _noTracksVisibility;
+        /// <summary>
+        /// MainViewModel's NoTracksVisibility property; this property is used in the ArtistPivotPage page to show "no tracks available" if necessary
+        /// </summary>
+        /// <returns></returns>
+        public Visibility NoTracksVisibility
+        {
+            get
+            {
+                return _noTracksVisibility;
+            }
+            set
+            {
+                if (value != _noTracksVisibility)
+                {
+                    _noTracksVisibility = value;
+                    NotifyPropertyChanged("NoTracksVisibility");
+                }
+            }
+        }
+
+        private Visibility _noAlbumsVisibility;
+        /// <summary>
+        /// MainViewModel's NoAlbumsVisibility property; this property is used in the ArtistPivotPage page to show "no albums available" if necessary
+        /// </summary>
+        /// <returns></returns>
+        public Visibility NoAlbumsVisibility
+        {
+            get
+            {
+                return _noAlbumsVisibility;
+            }
+            set
+            {
+                if (value != _noAlbumsVisibility)
+                {
+                    _noAlbumsVisibility = value;
+                    NotifyPropertyChanged("NoAlbumsVisibility");
+                }
+            }
+        }
+
+        private Visibility _noSinglesVisibility;
+        /// <summary>
+        /// MainViewModel's NoSinglesVisibility property; this property is used in the ArtistPivotPage page to show "no singles available" if necessary
+        /// </summary>
+        /// <returns></returns>
+        public Visibility NoSinglesVisibility
+        {
+            get
+            {
+                return _noSinglesVisibility;
+            }
+            set
+            {
+                if (value != _noSinglesVisibility)
+                {
+                    _noSinglesVisibility = value;
+                    NotifyPropertyChanged("NoSinglesVisibility");
+                }
+            }
+        }
+
+        private Visibility _noSimilarVisibility;
+        /// <summary>
+        /// MainViewModel's NoSimilarVisibility property; this property is used in the ArtistPivotPage page to show "no similar artists available" if necessary
+        /// </summary>
+        /// <returns></returns>
+        public Visibility NoSimilarVisibility
+        {
+            get
+            {
+                return _noSimilarVisibility;
+            }
+            set
+            {
+                if (value != _noSimilarVisibility)
+                {
+                    _noSimilarVisibility = value;
+                    NotifyPropertyChanged("NoSimilarVisibility");
+                }
+            }
+        }
+
         /// <summary>
         /// MainViewModel's IsDataLoaded property;
         /// </summary>
@@ -157,11 +313,11 @@ namespace MusicExplorer.ViewModels
         /// </summary>
         public void LoadData()
         {
-            MediaLibrary lib = new MediaLibrary();
+            mediaLib = new MediaLibrary();
             int totalTrackCount = 0;
             int totalArtistCount = 0;
 
-            foreach (Artist a in lib.Artists)// Song s in lib.Songs)
+            foreach (Artist a in mediaLib.Artists)
             {
                 if (a.Songs.Count == 0) continue; // Unknown artist with 0 tracks encountered
                 string artist = a.Name;
@@ -228,6 +384,22 @@ namespace MusicExplorer.ViewModels
             }
 
             this.IsDataLoaded = true;
+        }
+
+        public bool IsLocalArtist(string artistName)
+        {
+            bool ret = false;
+            artistName = artistName.ToLower();
+            foreach (Artist a in mediaLib.Artists)
+            {
+                string comparedNameLower = a.Name.ToLower();
+                if (comparedNameLower == artistName)
+                {
+                    ret = true;
+                    break;
+                }
+            }
+            return ret;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

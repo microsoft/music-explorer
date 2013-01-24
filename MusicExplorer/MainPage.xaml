@@ -1,5 +1,5 @@
 ﻿<!--
- Copyright © 2012 Nokia Corporation. All rights reserved.
+ Copyright © 2013 Nokia Corporation. All rights reserved.
  Nokia and Nokia Connecting People are registered trademarks of Nokia Corporation. 
  Other product and company names mentioned herein may be trademarks
  or trade names of their respective owners. 
@@ -20,13 +20,17 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait"  Orientation="Portrait"
-    shell:SystemTray.IsVisible="False">
+    shell:SystemTray.IsVisible="True">
+
+    <shell:SystemTray.ProgressIndicator>
+        <shell:ProgressIndicator x:Name="ProgressIndicator" IsIndeterminate="True" IsVisible="{Binding ProgressIndicatorVisible}" />
+    </shell:SystemTray.ProgressIndicator>
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
 
         <!--Panorama control-->
-        <phone:Panorama>
+        <phone:Panorama SelectionChanged="Panorama_SelectionChanged">
             <phone:Panorama.Title>
                 <Grid>
                     <TextBlock Text="music explorer"
@@ -34,11 +38,7 @@
                                FontFamily="{StaticResource PhoneFontFamilyLight}"
                                Margin="0,0,0,0">
                     </TextBlock>
-                    <TextBlock Text="NOKIA"
-                               FontSize="48"
-                               FontFamily="{StaticResource PhoneFontFamilyLight}"
-                               Margin="10,30,0,0">
-                    </TextBlock>
+                    <Image Height="18" HorizontalAlignment="Left" Margin="14,-86,0,0" Source="/Assets/nokia_logo.png"></Image>
                 </Grid>
             </phone:Panorama.Title>
 
@@ -93,7 +93,7 @@
                                     <StackPanel Width="311" Margin="8,-7,0,0">
                                         <TextBlock Text="{Binding Name}" Margin="10,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
                                         <TextBlock Text="{Binding Country}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
-                                        <TextBlock Text="{Binding SimilarArtistCount}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                                        <TextBlock Text="{Binding Genres}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
                                     </StackPanel>
                                 </StackPanel>
                             </Grid>

@@ -1,5 +1,5 @@
 ﻿<!--
- Copyright © 2012 Nokia Corporation. All rights reserved.
+ Copyright © 2013 Nokia Corporation. All rights reserved.
  Nokia and Nokia Connecting People are registered trademarks of Nokia Corporation. 
  Other product and company names mentioned herein may be trademarks
  or trade names of their respective owners. 
@@ -20,7 +20,12 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait"  Orientation="Portrait"
-    shell:SystemTray.IsVisible="True">
+    shell:SystemTray.IsVisible="True"
+    toolkit:TiltEffect.IsTiltEnabled="True">
+
+    <shell:SystemTray.ProgressIndicator>
+        <shell:ProgressIndicator x:Name="ProgressIndicator" IsIndeterminate="True" IsVisible="{Binding ProgressIndicatorVisible}" />
+    </shell:SystemTray.ProgressIndicator>
 
     <toolkit:TransitionService.NavigationInTransition>
         <toolkit:NavigationInTransition>
@@ -55,106 +60,145 @@
             
             <!--Pivot item one-->
             <phone:PivotItem Header="details">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="0,2,0,4" Height="105" Width="432">
-                        <Image Width="100" Height="100" Source="{Binding SelectedArtist.ThumbUri}"/>
-                        <StackPanel Width="311" Margin="8,-7,0,0">
-                            <TextBlock Text="{Binding SelectedArtist.Name}" Margin="10,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
-                            <TextBlock Text="{Binding SelectedArtist.Country}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
-                            <TextBlock Text="{Binding SelectedArtist.Genres}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                <Grid>
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="0,2,0,4" Height="105" Width="432">
+                            <Image Width="100" Height="100" Source="{Binding SelectedArtist.ThumbUri}"/>
+                            <StackPanel Width="311" Margin="8,-7,0,0">
+                                <TextBlock Text="{Binding SelectedArtist.Name}" Margin="10,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
+                                <TextBlock Text="{Binding SelectedArtist.Country}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                                <TextBlock Text="{Binding SelectedArtist.Genres}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
 
-                    <Button Content="Play songs stored in the device" Margin="0,100,0,0" Click="OnPlayClick"/>
-                    <Button Content="Show artist in Nokia Music" Margin="0,25,0,0" Click="OnShowArtistClick"/>
-                    <Button Content="Play artist mix in Nokia Music" Margin="0,25,0,0" Click="OnPlayMixClick"/>
-                </StackPanel>
+                        <Button HorizontalAlignment="Left" BorderBrush="Transparent" Margin="0,25,0,0" Width="456" Click="OnShowArtistClick">
+                            <ContentControl>     
+                                <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                                    <Image Margin="5,5,0,5" Width="50" Height="50" Stretch="UniformToFill" Source="/Assets/music_explorer_note.png"></Image>
+                                    <TextBlock Width="360" Margin="5,0,0,0" VerticalAlignment="Center" FontSize="24" Text="Show artist in Nokia Music"></TextBlock>
+                                </StackPanel>
+                            </ContentControl>
+                        </Button>
+
+                        <Button HorizontalAlignment="Left" BorderBrush="Transparent" Width="456" Click="OnPlayMixClick">
+                            <ContentControl>
+                                <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                                    <Image Margin="5,5,0,5" Width="50" Height="50" Stretch="UniformToFill" Source="/Assets/music_explorer_note.png"></Image>
+                                    <TextBlock Width="360" Margin="5,0,0,0" VerticalAlignment="Center" FontSize="24" Text="Play artist mix in Nokia Music"></TextBlock>
+                                </StackPanel>
+                            </ContentControl>
+                        </Button>
+
+                        <Button HorizontalAlignment="Left" x:Name="PlayLocalSongsButton" BorderBrush="Transparent" Width="456" Click="OnPlayClick" Visibility="Collapsed">
+                            <ContentControl>
+                                <StackPanel HorizontalAlignment="Left"  Orientation="Horizontal">
+                                    <Image Margin="0,0,0,0" Width="60" Height="60" Stretch="UniformToFill" Source="/Assets/music_explorer_play.png"></Image>
+                                    <TextBlock Width="360" Margin="0,0,0,0" VerticalAlignment="Center" FontSize="24" Text="Shuffle and play local tracks"></TextBlock>
+                                </StackPanel>
+                            </ContentControl>
+                        </Button>
+
+                    </StackPanel>
+                    <TextBlock x:Name="NowPlayingText" Width="442" Margin="0,0,0,2" TextAlignment="Center" TextWrapping="NoWrap" TextTrimming="WordEllipsis" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                </Grid>
             </phone:PivotItem>
 
             <!--Pivot item two-->
             <phone:PivotItem Header="tracks">
-                <phone:LongListSelector x:Name="TracksList" Margin="0,-7,0,2" ItemsSource="{Binding TracksForArtist}" SelectionChanged="OnTrackSelectionChanged" toolkit:TiltEffect.IsTiltEnabled="True">
-                    <phone:LongListSelector.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="12,2,0,4" Height="105" Width="432">
-                                    <Image Width="100" Height="100" Source="{Binding ThumbUri}"/>
-                                    <StackPanel Width="311" Margin="8,-7,0,0">
-                                        <TextBlock Text="{Binding Performers}" Margin="10,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
-                                        <TextBlock Text="{Binding Name}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
-                                        <TextBlock Text="{Binding Category}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                <Grid>
+                    <TextBlock Margin="0,50,0,0" FontSize="24" Text="No tracks available" HorizontalAlignment="Center" Visibility="{Binding NoTracksVisibility}"></TextBlock>
+                    <phone:LongListSelector x:Name="TracksList" Margin="0,-7,0,2" ItemsSource="{Binding TracksForArtist}" SelectionChanged="OnTrackSelectionChanged">
+                        <phone:LongListSelector.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="12,2,0,4" Height="105" Width="432">
+                                        <Image Width="100" Height="100" Source="{Binding ThumbUri}"/>
+                                        <StackPanel Width="311" Margin="8,-7,0,0">
+                                            <TextBlock Text="{Binding Performers}" Margin="10,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
+                                            <TextBlock Text="{Binding Name}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                                            <TextBlock Text="{Binding Category}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                                        </StackPanel>
                                     </StackPanel>
-                                </StackPanel>
-                                <Image Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="92,2,0,0" Source="Assets/music_explorer_note.png"/>
-                            </Grid>
-                        </DataTemplate>
-                    </phone:LongListSelector.ItemTemplate>
-                </phone:LongListSelector>
+                                    <Image Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="92,2,0,0" Source="Assets/music_explorer_note.png"/>
+                                </Grid>
+                            </DataTemplate>
+                        </phone:LongListSelector.ItemTemplate>
+                    </phone:LongListSelector>
+                </Grid>
             </phone:PivotItem>
 
             <!--Pivot item three-->
             <phone:PivotItem Header="albums">
-                <phone:LongListSelector x:Name="AlbumsList" Margin="0,-7,0,2" ItemsSource="{Binding AlbumsForArtist}" SelectionChanged="OnAlbumSelectionChanged" toolkit:TiltEffect.IsTiltEnabled="True">
-                    <phone:LongListSelector.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="12,2,0,4" Height="105" Width="432">
-                                    <Image Width="100" Height="100" Source="{Binding ThumbUri}"/>
-                                    <StackPanel Width="311" Margin="8,-7,0,0">
-                                        <TextBlock Text="{Binding Performers}" Margin="10,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
-                                        <TextBlock Text="{Binding Name}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
-                                        <TextBlock Text="{Binding Category}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                <Grid>
+                    <TextBlock Margin="0,50,0,0" FontSize="24" Text="No albums available" HorizontalAlignment="Center" Visibility="{Binding NoAlbumsVisibility}"></TextBlock>
+                    <phone:LongListSelector x:Name="AlbumsList" Margin="0,-7,0,2" ItemsSource="{Binding AlbumsForArtist}" SelectionChanged="OnAlbumSelectionChanged">
+                        <phone:LongListSelector.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="12,2,0,4" Height="105" Width="432">
+                                        <Image Width="100" Height="100" Source="{Binding ThumbUri}"/>
+                                        <StackPanel Width="311" Margin="8,-7,0,0">
+                                            <TextBlock Text="{Binding Performers}" Margin="10,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
+                                            <TextBlock Text="{Binding Name}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                                            <TextBlock Text="{Binding Category}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                                        </StackPanel>
                                     </StackPanel>
-                                </StackPanel>
-                                <Image Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="92,2,0,0" Source="Assets/music_explorer_note.png"/>
-                            </Grid>
-                        </DataTemplate>
-                    </phone:LongListSelector.ItemTemplate>
-                </phone:LongListSelector>
+                                    <Image Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="92,2,0,0" Source="Assets/music_explorer_note.png"/>
+                                </Grid>
+                            </DataTemplate>
+                        </phone:LongListSelector.ItemTemplate>
+                    </phone:LongListSelector>
+                </Grid>
             </phone:PivotItem>
 
             <!--Pivot item four-->
             <phone:PivotItem Header="singles">
-                <phone:LongListSelector x:Name="SinglesList" Margin="0,-7,0,2" ItemsSource="{Binding SinglesForArtist}" SelectionChanged="OnSingleSelectionChanged" toolkit:TiltEffect.IsTiltEnabled="True">
-                    <phone:LongListSelector.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="12,2,0,4" Height="105" Width="432">
-                                    <Image Width="100" Height="100" Source="{Binding ThumbUri}"/>
-                                    <StackPanel Width="311" Margin="8,-7,0,0">
-                                        <TextBlock Text="{Binding Performers}" Margin="10,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
-                                        <TextBlock Text="{Binding Name}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
-                                        <TextBlock Text="{Binding Category}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                <Grid>
+                    <TextBlock Margin="0,50,0,0" FontSize="24" Text="No singles available" HorizontalAlignment="Center" Visibility="{Binding NoSinglesVisibility}"></TextBlock>
+                    <phone:LongListSelector x:Name="SinglesList" Margin="0,-7,0,2" ItemsSource="{Binding SinglesForArtist}" SelectionChanged="OnSingleSelectionChanged" toolkit:TiltEffect.IsTiltEnabled="True">
+                        <phone:LongListSelector.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="12,2,0,4" Height="105" Width="432">
+                                        <Image Width="100" Height="100" Source="{Binding ThumbUri}"/>
+                                        <StackPanel Width="311" Margin="8,-7,0,0">
+                                            <TextBlock Text="{Binding Performers}" Margin="10,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
+                                            <TextBlock Text="{Binding Name}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                                            <TextBlock Text="{Binding Category}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                                        </StackPanel>
                                     </StackPanel>
-                                </StackPanel>
-                                <Image Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="92,2,0,0" Source="Assets/music_explorer_note.png"/>
-                            </Grid>
-                        </DataTemplate>
-                    </phone:LongListSelector.ItemTemplate>
-                </phone:LongListSelector>
+                                    <Image Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="92,2,0,0" Source="Assets/music_explorer_note.png"/>
+                                </Grid>
+                            </DataTemplate>
+                        </phone:LongListSelector.ItemTemplate>
+                    </phone:LongListSelector>
+                </Grid>
             </phone:PivotItem>
 
             <!--Pivot item five-->
             <phone:PivotItem Header="similar">
-                <phone:LongListSelector x:Name="SimilarList" Margin="0,-7,0,2" ItemsSource="{Binding SimilarForArtist}" SelectionChanged="OnSimilarArtistsSelectionChanged" toolkit:TiltEffect.IsTiltEnabled="True">
-                    <phone:LongListSelector.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="12,2,0,4" Height="105" Width="432">
-                                    <Image Width="100" Height="100" Source="{Binding ThumbUri}"/>
-                                    <StackPanel Width="311" Margin="8,-7,0,0">
-                                        <TextBlock Text="{Binding Name}" Margin="10,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
-                                        <TextBlock Text="{Binding Country}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
-                                        <TextBlock Text="{Binding Genres}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                <Grid>
+                    <TextBlock Margin="0,50,0,0" FontSize="24" Text="No similar artists available" HorizontalAlignment="Center" Visibility="{Binding NoSimilarVisibility}"></TextBlock>
+                    <phone:LongListSelector x:Name="SimilarList" Margin="0,-7,0,2" ItemsSource="{Binding SimilarForArtist}" SelectionChanged="OnSimilarArtistsSelectionChanged">
+                        <phone:LongListSelector.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="12,2,0,4" Height="105" Width="432">
+                                        <Image Width="100" Height="100" Source="{Binding ThumbUri}"/>
+                                        <StackPanel Width="311" Margin="8,-7,0,0">
+                                            <TextBlock Text="{Binding Name}" Margin="10,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
+                                            <TextBlock Text="{Binding Country}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                                            <TextBlock Text="{Binding Genres}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                                        </StackPanel>
                                     </StackPanel>
-                                </StackPanel>
-                                <Image Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="92,2,0,0" Source="Assets/music_explorer_note.png"/>
-                            </Grid>
-                        </DataTemplate>
-                    </phone:LongListSelector.ItemTemplate>
-                </phone:LongListSelector>
+                                    <Image Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="92,2,0,0" Source="Assets/music_explorer_note.png"/>
+                                </Grid>
+                            </DataTemplate>
+                        </phone:LongListSelector.ItemTemplate>
+                    </phone:LongListSelector>
+                </Grid>
             </phone:PivotItem>
         </phone:Pivot>
     </Grid>
-    
+
 </phone:PhoneApplicationPage>

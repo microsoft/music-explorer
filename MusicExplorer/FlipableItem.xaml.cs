@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2012 Nokia Corporation. All rights reserved.
+ * Copyright © 2013 Nokia Corporation. All rights reserved.
  * Nokia and Nokia Connecting People are registered trademarks of Nokia Corporation. 
  * Other product and company names mentioned herein may be trademarks
  * or trade names of their respective owners. 
@@ -156,7 +156,7 @@ namespace MusicExplorer
 
         public void Flip(double startDelayMs = 0)
         {
-            if (BackImage == null || BackImage.Length <= 0) return;
+            if (!App.ViewModel.FlipFavourites || BackImage == null || BackImage.Length <= 0) return;
             try
             {
                 // Start the flipping animation after the specified duration.

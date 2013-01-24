@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2012 Nokia Corporation. All rights reserved.
+ * Copyright © 2013 Nokia Corporation. All rights reserved.
  * Nokia and Nokia Connecting People are registered trademarks of Nokia Corporation. 
  * Other product and company names mentioned herein may be trademarks
  * or trade names of their respective owners. 
@@ -29,6 +29,8 @@ namespace MusicExplorer
 
             // Set the data context of the listbox control to the sample data
             DataContext = App.ViewModel;
+
+            SystemTray.SetOpacity(this, 0.01);
         }
 
         void OnMixSelected(Object sender, SelectionChangedEventArgs e)

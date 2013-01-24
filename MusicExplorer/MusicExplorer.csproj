@@ -162,11 +162,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\music_explorer_note.png" />
+    <Content Include="Assets\music_explorer_play.png" />
+    <Content Include="Assets\nokia_logo.png" />
     <Content Include="Assets\questionmark.png" />
     <Content Include="Assets\thumb_100_placeholder.png" />
     <Content Include="Assets\Tiles\Tile_159x159.png" />
     <Content Include="Assets\Tiles\Tile_336x336.png" />
     <Content Include="Assets\Tiles\Tile_691x336.png" />
+    <Content Include="Assets\transport.ff.png" />
+    <Content Include="Assets\transport.pause.png" />
+    <Content Include="Assets\transport.play.png" />
+    <Content Include="Assets\transport.rew.png" />
     <Content Include="README_FIRST.txt" />
     <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Check.png" />
