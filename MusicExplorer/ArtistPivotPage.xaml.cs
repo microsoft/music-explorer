@@ -44,9 +44,18 @@ namespace MusicExplorer
  	        base.OnNavigatedTo(e);
             MediaPlayer.ActiveSongChanged += MediaPlayer_ActiveSongChanged;
             TitleText.Title = App.ViewModel.SelectedArtist.Name.ToUpper();
+
             if (App.ViewModel.IsLocalArtist(App.ViewModel.SelectedArtist.Name))
             {
                 PlayLocalSongsButton.Visibility = Visibility.Visible;
+            }
+
+            if (MediaPlayer.State == MediaState.Playing)
+            {
+                NowPlayingText.Text = MediaPlayer.Queue.ActiveSong.Artist + " - " + MediaPlayer.Queue.ActiveSong.Name;
+                PlayPauseButton.IconUri = new Uri("/Assets/transport.pause.png", UriKind.Relative);
+                PlayPauseButton.Text = "Pause";
+                ApplicationBar.IsVisible = true;
             }
         }
 

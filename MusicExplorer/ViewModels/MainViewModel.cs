@@ -151,6 +151,27 @@ namespace MusicExplorer.ViewModels
             }
         }
 
+        private string _selectedMixGroup;
+        /// <summary>
+        /// MainViewModel's SelectedMixGroup property; this property is used in the MainPage to decide whether to make a new mix request
+        /// </summary>
+        /// <returns></returns>
+        public string SelectedMixGroup
+        {
+            get
+            {
+                return _selectedMixGroup;
+            }
+            set
+            {
+                if (value != _selectedMixGroup)
+                {
+                    _selectedMixGroup = value;
+                    NotifyPropertyChanged("SelectedMixGroup");
+                }
+            }
+        }
+
         private string _progressIndicatorText;
         /// <summary>
         /// <TODO>MainViewModel's SelectedGenre property; this property is used in the TopArtistsForGenre page to display its value using a Binding
@@ -210,6 +231,48 @@ namespace MusicExplorer.ViewModels
                 {
                     _flipFavourites = value;
                     NotifyPropertyChanged("FlipFavourites");
+                }
+            }
+        }
+
+        private Visibility _noFavouritesVisibility = Visibility.Collapsed;
+        /// <summary>
+        /// MainViewModel's NoFavouritesVisibility property; this property is used in the MainPage page to show "no favourites available" if necessary
+        /// </summary>
+        /// <returns></returns>
+        public Visibility NoFavouritesVisibility
+        {
+            get
+            {
+                return _noFavouritesVisibility;
+            }
+            set
+            {
+                if (value != _noFavouritesVisibility)
+                {
+                    _noFavouritesVisibility = value;
+                    NotifyPropertyChanged("NoFavouritesVisibility");
+                }
+            }
+        }
+
+        private Visibility _noRecommendedVisibility = Visibility.Collapsed;
+        /// <summary>
+        /// MainViewModel's NoRecommendedVisibility property; this property is used in the MainPage page to show "no recommendations available" if necessary
+        /// </summary>
+        /// <returns></returns>
+        public Visibility NoRecommendedVisibility
+        {
+            get
+            {
+                return _noRecommendedVisibility;
+            }
+            set
+            {
+                if (value != _noRecommendedVisibility)
+                {
+                    _noRecommendedVisibility = value;
+                    NotifyPropertyChanged("NoRecommendedVisibility");
                 }
             }
         }
@@ -381,6 +444,15 @@ namespace MusicExplorer.ViewModels
                     m.ProportionalHeight = "100";
                     m.ProportionalWidth = "206";
                 }
+            }
+
+            if (LocalAudio.Count <= 0)
+            {
+                NoFavouritesVisibility = Visibility.Visible;
+            }
+            else
+            {
+                NoFavouritesVisibility = Visibility.Collapsed;
             }
 
             this.IsDataLoaded = true;

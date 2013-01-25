@@ -132,6 +132,15 @@ namespace MusicExplorer
         {
             if (!initialized || localArtists.Count <= recommendResponses)
             {
+                if (initialized && App.ViewModel.Recommendations.Count <= 0)
+                {
+                    App.ViewModel.NoRecommendedVisibility = Visibility.Visible;
+                }
+                else
+                {
+                    App.ViewModel.NoRecommendedVisibility = Visibility.Collapsed;
+                }
+
                 return;
             }
 
@@ -824,7 +833,7 @@ namespace MusicExplorer
                 {
                     // generate a random track index
                     Random rand = new Random();
-                    int track = rand.Next(0, lib.Artists[i].Songs.Count - 1);
+                    int track = rand.Next(0, lib.Artists[i].Songs.Count);
                     
                     Microsoft.Xna.Framework.Media.SongCollection songCollection = lib.Artists[i].Songs;
                     Microsoft.Xna.Framework.Media.MediaPlayer.Play(songCollection, track);

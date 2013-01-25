@@ -152,9 +152,12 @@ namespace MusicExplorer
             GenreViewModel selected = (GenreViewModel)GenresList.SelectedItem;
             if (selected != null)
             {
-                App.ViewModel.TopArtistsForGenre.Clear();
-                App.MusicApi.GetTopArtistsForGenre(selected.Id);
-                App.ViewModel.SelectedGenre = selected.Name.ToLower();
+                if (selected.Name.ToLower() != App.ViewModel.SelectedGenre)
+                {
+                    App.ViewModel.TopArtistsForGenre.Clear();
+                    App.MusicApi.GetTopArtistsForGenre(selected.Id);
+                    App.ViewModel.SelectedGenre = selected.Name.ToLower();
+                }
                 NavigationService.Navigate(new Uri("/TopArtistsForGenrePage.xaml", UriKind.Relative));
                 GenresList.SelectedItem = null;
             }
@@ -165,8 +168,12 @@ namespace MusicExplorer
             MixGroupViewModel selected = (MixGroupViewModel)MixGroupsList.SelectedItem;
             if (selected != null)
             {
-                App.ViewModel.Mixes.Clear();
-                App.MusicApi.GetMixes(selected.Id);
+                if (selected.Id != App.ViewModel.SelectedMixGroup)
+                {
+                    App.ViewModel.Mixes.Clear();
+                    App.MusicApi.GetMixes(selected.Id);
+                    App.ViewModel.SelectedMixGroup = selected.Id;
+                }
                 NavigationService.Navigate(new Uri("/MixesPage.xaml", UriKind.Relative));
                 MixGroupsList.SelectedItem = null;
             }

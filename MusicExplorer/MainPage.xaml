@@ -48,58 +48,64 @@
 
             <!--Panorama item one-->
             <phone:PanoramaItem>
-                <ListBox Margin="0,-38, -22,2" x:Name="LocalAudioList" ItemsSource="{Binding LocalAudio}" SelectionChanged="OnFavoriteSelectionChanged">
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <toolkit:WrapPanel/>
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
+                <Grid>
+                    <TextBlock Margin="12,68,0,0" FontSize="24" TextWrapping="Wrap" Text="No local songs available for creating favourites list. Favourites list shows 20 artists with the most played songs." HorizontalAlignment="Center" Visibility="{Binding NoFavouritesVisibility}"></TextBlock>
+                    <ListBox Margin="0,-38, -22,2" x:Name="LocalAudioList" ItemsSource="{Binding LocalAudio}" SelectionChanged="OnFavoriteSelectionChanged">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <toolkit:WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
 
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <controls:FlipableItem Height="{Binding ProportionalHeight}"
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <controls:FlipableItem Height="{Binding ProportionalHeight}"
                                                    Width="{Binding ProportionalWidth}"
                                                    ItemWidth="{Binding ProportionalWidth}"
                                                    FrontPrimaryText="{Binding Name}" 
                                                    FrontSecondaryText="{Binding TrackCount}"
                                                    BackImage="{Binding ThumbUri}"/>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
             </phone:PanoramaItem>
 
             <!--Panorama two-->
             <phone:PanoramaItem>
-                <phone:LongListSelector x:Name="RecommendationsList" Margin="0,-38,-22,2" ItemsSource="{Binding Recommendations}" SelectionChanged="OnRecommendationSelectionChanged" toolkit:TiltEffect.IsTiltEnabled="True">
-                    <phone:LongListSelector.ListHeaderTemplate>
-                        <DataTemplate>
-                            <Grid Margin="12,0,0,20">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Text="recommended"
+                <Grid>
+                    <TextBlock Margin="12,68,0,0" FontSize="24" TextWrapping="Wrap" Text="No recommendations available. List of recommended artists is created based on your favourite artists." HorizontalAlignment="Center" Visibility="{Binding NoRecommendedVisibility}"></TextBlock>
+                    <phone:LongListSelector x:Name="RecommendationsList" Margin="0,-38,-22,2" ItemsSource="{Binding Recommendations}" SelectionChanged="OnRecommendationSelectionChanged" toolkit:TiltEffect.IsTiltEnabled="True">
+                        <phone:LongListSelector.ListHeaderTemplate>
+                            <DataTemplate>
+                                <Grid Margin="12,0,0,20">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="recommended"
                                            Style="{StaticResource PanoramaItemHeaderTextStyle}"
                                            FontSize="65"
                                            Grid.Row="0"/>
-                            </Grid>
-                        </DataTemplate>
-                    </phone:LongListSelector.ListHeaderTemplate>
-                    <phone:LongListSelector.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <StackPanel Orientation="Horizontal" Margin="12,2,0,4" Height="105" Width="432">
-                                    <Image Width="100" Height="100" Source="{Binding ThumbUri}"/>
-                                    <StackPanel Width="311" Margin="8,-7,0,0">
-                                        <TextBlock Text="{Binding Name}" Margin="10,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
-                                        <TextBlock Text="{Binding Country}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
-                                        <TextBlock Text="{Binding Genres}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                                </Grid>
+                            </DataTemplate>
+                        </phone:LongListSelector.ListHeaderTemplate>
+                        <phone:LongListSelector.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal" Margin="12,2,0,4" Height="105" Width="432">
+                                        <Image Width="100" Height="100" Source="{Binding ThumbUri}"/>
+                                        <StackPanel Width="311" Margin="8,-7,0,0">
+                                            <TextBlock Text="{Binding Name}" Margin="10,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
+                                            <TextBlock Text="{Binding Country}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                                            <TextBlock Text="{Binding Genres}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                                        </StackPanel>
                                     </StackPanel>
-                                </StackPanel>
-                            </Grid>
-                        </DataTemplate>
-                    </phone:LongListSelector.ItemTemplate>
-                </phone:LongListSelector>
+                                </Grid>
+                            </DataTemplate>
+                        </phone:LongListSelector.ItemTemplate>
+                    </phone:LongListSelector>
+                </Grid>
             </phone:PanoramaItem>
 
             <!--Panorama item three-->

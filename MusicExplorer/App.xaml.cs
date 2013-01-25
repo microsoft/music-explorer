@@ -151,6 +151,17 @@ namespace MusicExplorer
                 // An unhandled exception has occurred; break into the debugger
                 Debugger.Break();
             }
+            else
+            {
+                e.Handled = true;
+
+                // Show what exception occurred, for debugging purposes
+                MessageBox.Show(e.ExceptionObject.Source + ": " 
+                                + e.ExceptionObject.Message + "\n"
+                                + "\n" + e.ExceptionObject.StackTrace);
+
+                MessageBox.Show("It is strongly suggested to restart the application as it may not work as expected.");
+            }
         }
 
         #region Phone application initialization
