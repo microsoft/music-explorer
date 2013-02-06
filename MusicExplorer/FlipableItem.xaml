@@ -23,12 +23,12 @@
 
     <UserControl.Resources>
         <Storyboard x:Name="FlipFrontToBackSB" Duration="00:00:0.500">
-            <!-- First rotate the Front image 90 degrees -->
+            <!-- First rotate the Front 90 degrees -->
             <DoubleAnimation BeginTime="00:00:00" Storyboard.TargetName="FrontSide"
                         Storyboard.TargetProperty="(UIElement.Projection).(RotationY)"
                         From="0" To="90" Duration="00:00:00.250" />
             
-            <!-- Then hide the Front image and show the Back image-->
+            <!-- Then hide the Front and show the Back-->
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UiElement.Visibility)"
                                     Storyboard.TargetName="FrontSide">
                 <DiscreteObjectKeyFrame KeyTime="00:00:00.250">
@@ -46,19 +46,19 @@
                 </DiscreteObjectKeyFrame>
             </ObjectAnimationUsingKeyFrames>
             
-            <!-- Then rotate the Back image -->
+            <!-- Then rotate the Back -->
             <DoubleAnimation BeginTime="00:00:00.250" Storyboard.TargetName="BackSide"
                         Storyboard.TargetProperty="(UIElement.Projection).(RotationY)"
                         From="270" To="360" Duration="00:00:00.250" />
         </Storyboard>
         
         <Storyboard x:Name="FlipBackToFrontSB" Duration="00:00:0.500">
-            <!-- First rotate the Back image 90 degrees -->
+            <!-- First rotate the Back 90 degrees -->
             <DoubleAnimation BeginTime="00:00:00" Storyboard.TargetName="BackSide"
                         Storyboard.TargetProperty="(UIElement.Projection).(RotationY)"
                         From="360" To="270" Duration="00:00:00.250" />
 
-            <!-- Then hide the Front image and show the Back image-->
+            <!-- Then hide the Back and show the Front-->
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UiElement.Visibility)"
                                     Storyboard.TargetName="BackSide">
                 <DiscreteObjectKeyFrame KeyTime="00:00:00.250">
@@ -76,7 +76,7 @@
                 </DiscreteObjectKeyFrame>
             </ObjectAnimationUsingKeyFrames>
 
-            <!-- Then rotate the Front image -->
+            <!-- Then rotate the Front -->
             <DoubleAnimation BeginTime="00:00:00.250" Storyboard.TargetName="FrontSide"
                         Storyboard.TargetProperty="(UIElement.Projection).(RotationY)"
                         From="90" To="0" Duration="00:00:00.250" />

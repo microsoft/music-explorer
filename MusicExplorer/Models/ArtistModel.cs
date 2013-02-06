@@ -13,15 +13,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MusicExplorer.ViewModels
+namespace MusicExplorer.Models
 {
-    public class ArtistViewModel : INotifyPropertyChanged
+    /// <summary>
+    /// Data model to hold all the needed data for an artist.
+    /// </summary>
+    public class ArtistModel : INotifyPropertyChanged
     {
         private string _name;
         /// <summary>
-        /// Artist's Name property; this property is used in the view to display its value using a Binding.
+        /// Artist's Name property. 
+        /// This property is used in the UI to display its value using a Binding.
         /// </summary>
-        /// <returns></returns>
         public string Name
         {
             get
@@ -40,9 +43,9 @@ namespace MusicExplorer.ViewModels
 
         private string _country;
         /// <summary>
-        /// Artist's Country property; this property is used in the view to display its value using a Binding.
+        /// Artist's Country property. 
+        /// This property is used in the UI to display its value using a Binding.
         /// </summary>
-        /// <returns></returns>
         public string Country
         {
             get
@@ -61,9 +64,9 @@ namespace MusicExplorer.ViewModels
 
         private string _genres;
         /// <summary>
-        /// Artist's Genres property; this property is used in the view to display its value using a Binding.
+        /// Artist's Genres property.
+        /// This property is used in the UI to display its value using a Binding.
         /// </summary>
-        /// <returns></returns>
         public string Genres
         {
             get
@@ -82,9 +85,9 @@ namespace MusicExplorer.ViewModels
 
         private Uri _thumbUri;
         /// <summary>
-        /// Artist's ThumbUri property; this property is used in the view to display its value using a Binding.
+        /// Artist's ThumbUri property.
+        /// This property is used in the UI to display the image in Uri using a Binding.
         /// </summary>
-        /// <returns></returns>
         public Uri ThumbUri
         {
             get
@@ -103,9 +106,9 @@ namespace MusicExplorer.ViewModels
 
         private string _id;
         /// <summary>
-        /// Artist's Id property; this property is used in some Nokia Music API methods.
+        /// Artist's Id property.
+        /// This property is used in some Nokia Music API methods.
         /// </summary>
-        /// <returns></returns>
         public string Id
         {
             get
@@ -122,32 +125,32 @@ namespace MusicExplorer.ViewModels
             }
         }
 
-        private string _trackCount;
+        private string _localTrackCount;
         /// <summary>
-        /// Artist's TrackCount property; this property is used in the view to display its value using a Binding.
+        /// Artist's LocalTrackCount property.
+        /// This property is used in the UI to display its value using a Binding.
         /// </summary>
-        /// <returns></returns>
-        public string TrackCount
+        public string LocalTrackCount
         {
             get
             {
-                return _trackCount;
+                return _localTrackCount;
             }
             set
             {
-                if (value != _trackCount)
+                if (value != _localTrackCount)
                 {
-                    _trackCount = value;
-                    NotifyPropertyChanged("TrackCount");
+                    _localTrackCount = value;
+                    NotifyPropertyChanged("LocalTrackCount");
                 }
             }
         }
 
         private string _playCount;
         /// <summary>
-        /// Artist's PlayCount property; this property is used when determining the order of artists in favourites view.
+        /// Artist's PlayCount property.
+        /// This property is used when determining the order of artists in favourites view.
         /// </summary>
-        /// <returns></returns>
         public string PlayCount
         {
             get
@@ -164,53 +167,53 @@ namespace MusicExplorer.ViewModels
             }
         }
 
-        private string _proportionalWidth;
+        private string _itemWidth;
         /// <summary>
-        /// Artist's ProportionalWidth property; this property is used when determining width of the artist item in favourites view.
+        /// Artist's itemWidth property.
+        /// This property is used when determining width of the artist item in favourites view.
         /// </summary>
-        /// <returns></returns>
-        public string ProportionalWidth
+        public string ItemWidth
         {
             get
             {
-                return _proportionalWidth;
+                return _itemWidth;
             }
             set
             {
-                if (value != _proportionalWidth)
+                if (value != _itemWidth)
                 {
-                    _proportionalWidth = value;
-                    NotifyPropertyChanged("ProportionalWidth");
+                    _itemWidth = value;
+                    NotifyPropertyChanged("ItemWidth");
                 }
             }
         }
 
-        private string _proportionalHeight;
+        private string _itemHeight;
         /// <summary>
-        /// Artist's ProportionalWidth property; this property is used when determining height of the artist item in favourites view.
+        /// Artist's ItemWidth property.
+        /// This property is used when determining height of the artist item in favourites view.
         /// </summary>
-        /// <returns></returns>
-        public string ProportionalHeight
+        public string ItemHeight
         {
             get
             {
-                return _proportionalHeight;
+                return _itemHeight;
             }
             set
             {
-                if (value != _proportionalHeight)
+                if (value != _itemHeight)
                 {
-                    _proportionalHeight = value;
-                    NotifyPropertyChanged("ProportionalHeight");
+                    _itemHeight = value;
+                    NotifyPropertyChanged("ItemHeight");
                 }
             }
         }
 
         private int _similarArtistCount;
         /// <summary>
-        /// Artist's SimilarArtistCount property; this property is used when determining the order of artists in Recommended view.
+        /// Artist's SimilarArtistCount property.
+        /// This property is used when determining the order of artists in Recommended view.
         /// </summary>
-        /// <returns></returns>
         public int SimilarArtistCount
         {
             get

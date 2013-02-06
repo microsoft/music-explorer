@@ -16,7 +16,7 @@ using Nokia.Music.Phone.Tasks;
 using Nokia.Music.Phone.Types;
 using System.Windows.Threading;
 
-using MusicExplorer.ViewModels;
+using MusicExplorer.Models;
 using System.Windows;
 using System.Globalization;
 using System.Collections.ObjectModel;
@@ -27,10 +27,16 @@ using System.ComponentModel;
 namespace MusicExplorer
 {
     /// <summary>
-    /// 
+    /// This class represents Nokia Music API to the rest of the application.
+    /// All requests to Nokia Music API are sent by an instance of this class,
+    /// and all the responses from Nokia Music API are handled by this class.
     /// </summary>
     public class MusicApi
     {
+        // Constants
+        private const string MUSIC_EXPLORER_APP_ID = "v0Bh5kUAzCDp7PVS4kKr";
+        private const string MUSIC_EXPLORER_APP_TOKEN = "OfItN9r8E5QHfNO5mw-rEg";
+
         // Members
         private MusicClient client = null;
         private bool initialized = false;
@@ -42,32 +48,38 @@ namespace MusicExplorer
         private int recommendResponses = 0;
 
         /// <summary>
-        /// 
+        /// Constructor.
         /// </summary>
         public MusicApi()
         {
         }
 
         /// <summary>
-        /// 
+        /// Initializes Nokia Music API for further requests. Responses to  
+        /// requests depend on the region - TopArtists are country specific
+        /// for example, and genres are localized by the region.
         /// </summary>
-        /// <param name="countryCode"></param>
+        /// <param name="countryCode">An ISO 3166-2 country code validated by the Nokia Music API CountryResolver</param>
         public void Initialize(string countryCode)
         {
             // Create a music client with correct AppId and Token/AppCode
             if (countryCode == null || countryCode.Length <= 0)
             {
-                client = new MusicClient("v0Bh5kUAzCDp7PVS4kKr", "OfItN9r8E5QHfNO5mw-rEg");
+                client = new MusicClient(MUSIC_EXPLORER_APP_ID, MUSIC_EXPLORER_APP_TOKEN);
             }
             else
             {
-                client = new MusicClient("v0Bh5kUAzCDp7PVS4kKr", "OfItN9r8E5QHfNO5mw-rEg", countryCode);
+                client = new MusicClient(MUSIC_EXPLORER_APP_ID, MUSIC_EXPLORER_APP_TOKEN, countryCode);
             }
             initialized = true;
         }
 
         /// <summary>
-        /// 
+        /// Retrieves information (id, genre, thumbnail, etc.) for local artists.
+        /// This method initiates a chain of requests, which
+        /// 1. requests artist information for each of the local artists
+        ///    one after another.
+        /// 2. Initiates recommendations searching.
         /// </summary>
         public void GetArtistInfoForLocalAudio()
         {
@@ -76,7 +88,7 @@ namespace MusicExplorer
                 return;
             }
 
-            ArtistViewModel m = App.ViewModel.LocalAudio[localAudioResponses];
+            ArtistModel m = App.ViewModel.LocalAudio[localAudioResponses];
 
             client.SearchArtists((ListResponse<Artist> response) =>
             {
@@ -86,9 +98,9 @@ namespace MusicExplorer
                     if (response != null && response.Result != null && response.Result.Count > 0)
                     {
                         m.Id = response.Result[0].Id;
-                        m.Country = GetCountryName(response.Result[0].Country);
+                        m.Country = CountryCodes.CountryNameFromTwoLetter(response.Result[0].Country);
                         m.Genres = response.Result[0].Genres[0].Name;
-                        int itemHeight = Int32.Parse(m.ProportionalHeight);
+                        int itemHeight = Int32.Parse(m.ItemHeight);
 
                         if (response.Result[0].Thumb200Uri != null && itemHeight > 100)
                         {
@@ -108,7 +120,7 @@ namespace MusicExplorer
 
                     if (response != null && response.Error != null)
                     {
-                        MessageBox.Show("Nokia Music API error. Please ensure that the device is connected to Internet and restart the application.");
+                        ShowNokiaMusicApiError();
                     }
                     HideProgressIndicator("GetArtistInfoForLocalAudio()");
 
@@ -126,7 +138,9 @@ namespace MusicExplorer
         }
 
         /// <summary>
-        /// 
+        /// Builds the recommended artists lists.
+        /// This method initiates a chain of requests, which requests similar
+        /// artists information for each of the local artists one after another.
         /// </summary>
         private void FetchRecommendations()
         {
@@ -189,7 +203,7 @@ namespace MusicExplorer
 
                                             if (i > j)
                                             {
-                                                ArtistViewModel artist = App.ViewModel.Recommendations[i];
+                                                ArtistModel artist = App.ViewModel.Recommendations[i];
                                                 App.ViewModel.Recommendations.RemoveAt(i);
                                                 App.ViewModel.Recommendations.Insert(j, artist);
                                                 break;
@@ -205,10 +219,10 @@ namespace MusicExplorer
                             {
                                 if (a.Thumb100Uri != null)
                                 {
-                                    App.ViewModel.Recommendations.Add(new ArtistViewModel()
+                                    App.ViewModel.Recommendations.Add(new ArtistModel()
                                         { 
                                             Name = a.Name, 
-                                            Country = GetCountryName(a.Country), 
+                                            Country = CountryCodes.CountryNameFromTwoLetter(a.Country), 
                                             Genres = a.Genres[0].Name, 
                                             ThumbUri = a.Thumb100Uri, 
                                             Id = a.Id, 
@@ -217,10 +231,10 @@ namespace MusicExplorer
                                 }
                                 else
                                 {
-                                    App.ViewModel.Recommendations.Add(new ArtistViewModel() 
+                                    App.ViewModel.Recommendations.Add(new ArtistModel() 
                                         { 
-                                            Name = a.Name, 
-                                            Country = GetCountryName(a.Country), 
+                                            Name = a.Name,
+                                            Country = CountryCodes.CountryNameFromTwoLetter(a.Country), 
                                             Genres = a.Genres[0].Name, 
                                             ThumbUri = new Uri("/Assets/thumb_100_placeholder.png", 
                                                                UriKind.Relative), 
@@ -234,7 +248,7 @@ namespace MusicExplorer
 
                     if (response != null && response.Error != null)
                     {
-                        MessageBox.Show("Nokia Music API error. Please ensure that the device is connected to Internet and restart the application.");
+                        ShowNokiaMusicApiError();
                     }
                     HideProgressIndicator("FetchRecommendations()");
 
@@ -246,7 +260,7 @@ namespace MusicExplorer
         }
 
         /// <summary>
-        /// 
+        /// Retrieves top artists (10 most popular) from Nokia Music API.
         /// </summary>
         public void GetTopArtists()
         {
@@ -268,10 +282,10 @@ namespace MusicExplorer
                         {
                             if (a.Thumb100Uri != null)
                             {
-                                App.ViewModel.TopArtists.Add(new ArtistViewModel() 
+                                App.ViewModel.TopArtists.Add(new ArtistModel() 
                                     { 
-                                        Name = a.Name, 
-                                        Country = GetCountryName(a.Country), 
+                                        Name = a.Name,
+                                        Country = CountryCodes.CountryNameFromTwoLetter(a.Country), 
                                         Genres = a.Genres[0].Name, 
                                         ThumbUri = a.Thumb100Uri, 
                                         Id = a.Id
@@ -279,10 +293,10 @@ namespace MusicExplorer
                             }
                             else
                             {
-                                App.ViewModel.TopArtists.Add(new ArtistViewModel() 
+                                App.ViewModel.TopArtists.Add(new ArtistModel() 
                                     { 
-                                        Name = a.Name, 
-                                        Country = GetCountryName(a.Country), 
+                                        Name = a.Name,
+                                        Country = CountryCodes.CountryNameFromTwoLetter(a.Country), 
                                         Genres = a.Genres[0].Name, 
                                         ThumbUri = new Uri("/Assets/thumb_100_placeholder.png", 
                                                            UriKind.Relative), 
@@ -294,7 +308,7 @@ namespace MusicExplorer
 
                     if (response != null && response.Error != null)
                     {
-                        MessageBox.Show("Nokia Music API error. Please ensure that the device is connected to Internet and restart the application.");
+                        ShowNokiaMusicApiError();
                     }
                     HideProgressIndicator("GetTopArtists()");
                 });
@@ -303,7 +317,7 @@ namespace MusicExplorer
         }
 
         /// <summary>
-        /// 
+        /// Retrieves new releases (10 latest albums) from Nokia Music API.
         /// </summary>
         public void GetNewReleases()
         {
@@ -343,7 +357,7 @@ namespace MusicExplorer
 
                             if (p.Thumb100Uri != null)
                             {
-                                App.ViewModel.NewReleases.Add(new ProductViewModel()
+                                App.ViewModel.NewReleases.Add(new ProductModel()
                                     {
                                         Performers = performersString,
                                         Name = p.Name,
@@ -354,7 +368,7 @@ namespace MusicExplorer
                             }
                             else
                             {
-                                App.ViewModel.NewReleases.Add(new ProductViewModel()
+                                App.ViewModel.NewReleases.Add(new ProductModel()
                                     {
                                         Performers = performersString,
                                         Name = p.Name,
@@ -369,7 +383,7 @@ namespace MusicExplorer
 
                     if (response != null && response.Error != null)
                     {
-                        MessageBox.Show("Nokia Music API error. Please ensure that the device is connected to Internet and restart the application.");
+                        ShowNokiaMusicApiError();
                     }
                     HideProgressIndicator("GetNewReleases()");
                 });
@@ -378,7 +392,7 @@ namespace MusicExplorer
         }
 
         /// <summary>
-        /// 
+        /// Retrieves available genres from Nokia Music API.
         /// </summary>
         public void GetGenres()
         {
@@ -399,12 +413,12 @@ namespace MusicExplorer
 
                         foreach (Genre g in response.Result)
                         {
-                            App.ViewModel.Genres.Add(new GenreViewModel() { Name = g.Name, Id = g.Id });
+                            App.ViewModel.Genres.Add(new GenreModel() { Name = g.Name, Id = g.Id });
                         }
                     }
                     if (response != null && response.Error != null)
                     {
-                        MessageBox.Show("Nokia Music API error. Please ensure that the device is connected to Internet and restart the application.");
+                        ShowNokiaMusicApiError();
                     }
                     HideProgressIndicator("GetGenres()");
                 });
@@ -413,8 +427,9 @@ namespace MusicExplorer
         }
 
         /// <summary>
-        /// 
+        /// Retrieves top artists of a selected genre from Nokia Music API.
         /// </summary>
+        /// <param name="id">Id of the genre.</param>
         public void GetTopArtistsForGenre(string id)
         {
             if (!initialized)
@@ -435,10 +450,10 @@ namespace MusicExplorer
                         {
                             if (a.Thumb100Uri != null)
                             {
-                                App.ViewModel.TopArtistsForGenre.Add(new ArtistViewModel() 
+                                App.ViewModel.TopArtistsForGenre.Add(new ArtistModel() 
                                     { 
-                                        Name = a.Name, 
-                                        Country = GetCountryName(a.Country), 
+                                        Name = a.Name,
+                                        Country = CountryCodes.CountryNameFromTwoLetter(a.Country), 
                                         Genres = a.Genres[0].Name, 
                                         ThumbUri = a.Thumb100Uri, 
                                         Id = a.Id
@@ -446,10 +461,10 @@ namespace MusicExplorer
                             }
                             else
                             {
-                                App.ViewModel.TopArtistsForGenre.Add(new ArtistViewModel() 
+                                App.ViewModel.TopArtistsForGenre.Add(new ArtistModel() 
                                     { 
-                                        Name = a.Name, 
-                                        Country = GetCountryName(a.Country), 
+                                        Name = a.Name,
+                                        Country = CountryCodes.CountryNameFromTwoLetter(a.Country), 
                                         Genres = a.Genres[0].Name, 
                                         ThumbUri = new Uri("/Assets/thumb_100_placeholder.png", 
                                                            UriKind.Relative), 
@@ -461,7 +476,7 @@ namespace MusicExplorer
 
                     if (response != null && response.Error != null)
                     {
-                        MessageBox.Show("Nokia Music API error. Please ensure that the device is connected to Internet and restart the application.");
+                        ShowNokiaMusicApiError();
                     }
                     HideProgressIndicator("GetTopArtistsForGenre()");
                 });
@@ -470,7 +485,7 @@ namespace MusicExplorer
         }
 
         /// <summary>
-        /// 
+        /// Retrieves available mix groups from Nokia Music API.
         /// </summary>
         public void GetMixGroups()
         {
@@ -490,7 +505,7 @@ namespace MusicExplorer
 
                         foreach (MixGroup mg in response.Result)
                         {
-                            App.ViewModel.MixGroups.Add(new MixGroupViewModel()
+                            App.ViewModel.MixGroups.Add(new MixGroupModel()
                                 {
                                     Name = mg.Name,
                                     Id = mg.Id
@@ -500,7 +515,7 @@ namespace MusicExplorer
 					
                     if (response != null && response.Error != null)
                     {
-                        MessageBox.Show("Nokia Music API error. Please ensure that the device is connected to Internet and restart the application.");
+                        ShowNokiaMusicApiError();
                     }
                     HideProgressIndicator("GetMixGroups()");
                 });
@@ -509,9 +524,9 @@ namespace MusicExplorer
         }
 
         /// <summary>
-        /// 
+        /// Retrieves available mixes in a selected mix group from Nokia Music API.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Id of the mix group.</param>
         public void GetMixes(string id)
         {
             if (!initialized)
@@ -537,7 +552,7 @@ namespace MusicExplorer
                                 parentalAdvisoryString = "Parental advisory";
                             }
 
-                            App.ViewModel.Mixes.Add(new MixViewModel()
+                            App.ViewModel.Mixes.Add(new MixModel()
                                 {
                                     Name = m.Name,
                                     ParentalAdvisory = parentalAdvisoryString,
@@ -549,7 +564,7 @@ namespace MusicExplorer
 
                     if (response != null && response.Error != null)
                     {
-                        MessageBox.Show("Nokia Music API error. Please ensure that the device is connected to Internet and restart the application.");
+                        ShowNokiaMusicApiError();
                     }
                     HideProgressIndicator("GetMixes()");
                 });
@@ -558,9 +573,9 @@ namespace MusicExplorer
         }
 
         /// <summary>
-        /// 
+        /// Retrieves 30 products for a selected artist from Nokia Music API.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Id of the artist.</param>
         public void GetProductsForArtist(string id)
         {
             if (!initialized)
@@ -630,7 +645,7 @@ namespace MusicExplorer
                             if (p.Category == Category.Track)
                             {
                                 categoryString = "Track";
-                                App.ViewModel.TracksForArtist.Add(new ProductViewModel()
+                                App.ViewModel.TracksForArtist.Add(new ProductModel()
                                     {
                                         Performers = performersString,
                                         Name = p.Name,
@@ -642,7 +657,7 @@ namespace MusicExplorer
                             else if (p.Category == Category.Single)
                             {
                                 categoryString = "Single";
-                                App.ViewModel.SinglesForArtist.Add(new ProductViewModel()
+                                App.ViewModel.SinglesForArtist.Add(new ProductModel()
                                     {
                                         Performers = performersString,
                                         Name = p.Name,
@@ -653,7 +668,7 @@ namespace MusicExplorer
                             }
                             else
                             {
-                                App.ViewModel.AlbumsForArtist.Add(new ProductViewModel()
+                                App.ViewModel.AlbumsForArtist.Add(new ProductModel()
                                     {
                                         Performers = performersString,
                                         Name = p.Name,
@@ -682,7 +697,7 @@ namespace MusicExplorer
 
                     if (response != null && response.Error != null)
                     {
-                        MessageBox.Show("Nokia Music API error. Please ensure that the device is connected to Internet and restart the application.");
+                        ShowNokiaMusicApiError();
                     }
                     HideProgressIndicator("GetProductsForArtist()");
                 });
@@ -691,9 +706,9 @@ namespace MusicExplorer
         }
 
         /// <summary>
-        /// 
+        /// Retrieves similar artists for a selected artist from Nokia Music API.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Id of the artist.</param>
         public void GetSimilarArtists(string id)
         {
             if (!initialized)
@@ -715,10 +730,10 @@ namespace MusicExplorer
                         {
                             if (a.Thumb100Uri != null)
                             {
-                                App.ViewModel.SimilarForArtist.Add(new ArtistViewModel() 
+                                App.ViewModel.SimilarForArtist.Add(new ArtistModel() 
                                     { 
-                                        Name = a.Name, 
-                                        Country = GetCountryName(a.Country), 
+                                        Name = a.Name,
+                                        Country = CountryCodes.CountryNameFromTwoLetter(a.Country), 
                                         Genres = a.Genres[0].Name, 
                                         ThumbUri = a.Thumb100Uri, 
                                         Id = a.Id
@@ -726,10 +741,10 @@ namespace MusicExplorer
                             }
                             else
                             {
-                                App.ViewModel.SimilarForArtist.Add(new ArtistViewModel() 
+                                App.ViewModel.SimilarForArtist.Add(new ArtistModel() 
                                 { 
-                                    Name = a.Name, 
-                                    Country = GetCountryName(a.Country), 
+                                    Name = a.Name,
+                                    Country = CountryCodes.CountryNameFromTwoLetter(a.Country), 
                                     Genres = a.Genres[0].Name, 
                                     ThumbUri = new Uri("/Assets/thumb_100_placeholder.png", 
                                                        UriKind.Relative), 
@@ -747,7 +762,7 @@ namespace MusicExplorer
 
                     if (response != null && response.Error != null)
                     {
-                        MessageBox.Show("Nokia Music API error. Please ensure that the device is connected to Internet and restart the application.");
+                        ShowNokiaMusicApiError();
                     }
                     HideProgressIndicator("GetSimilarArtists()");
                 });
@@ -755,9 +770,9 @@ namespace MusicExplorer
         }
 
         /// <summary>
-        /// 
+        /// Launches Nokia Music App to play a selected mix.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Id of the mix.</param>
         public void LaunchMix(string id)
         {
             if (!initialized)
@@ -771,9 +786,9 @@ namespace MusicExplorer
         }
 
         /// <summary>
-        /// 
+        /// Launches Nokia Music App to play a mix for a selected artist.
         /// </summary>
-        /// <param name="artistName"></param>
+        /// <param name="artistName">Name of the artist.</param>
         public void LaunchArtistMix(string artistName)
         {
             if (!initialized)
@@ -787,9 +802,9 @@ namespace MusicExplorer
         }
 
         /// <summary>
-        /// 
+        /// Launches Nokia Music App to show information on a selected product.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Id of the product.</param>
         public void LaunchProduct(string id)
         {
             if (!initialized)
@@ -803,9 +818,9 @@ namespace MusicExplorer
         }
 
         /// <summary>
-        /// 
+        /// Launches Nokia Music App to show information on a selected artist.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">id of the artist.</param>
         public void LaunchArtist(string id)
         {
             if (!initialized)
@@ -819,31 +834,11 @@ namespace MusicExplorer
         }
 
         /// <summary>
-        /// 
+        /// This method makes progress indicator visible.
+        /// Provided text is added into an array of strings of which the
+        /// latest text is shown in progress indicator.
         /// </summary>
-        /// <param name="localArtistName"></param>
-        public void PlayLocalArtist(string localArtistName)
-        {
-            Microsoft.Xna.Framework.Media.MediaLibrary lib =
-                new Microsoft.Xna.Framework.Media.MediaLibrary();
-
-            for (int i = 0; i < lib.Artists.Count; i++)
-            {
-                if (localArtistName == lib.Artists[i].Name)
-                {
-                    // generate a random track index
-                    Random rand = new Random();
-                    int track = rand.Next(0, lib.Artists[i].Songs.Count);
-                    
-                    Microsoft.Xna.Framework.Media.SongCollection songCollection = lib.Artists[i].Songs;
-                    Microsoft.Xna.Framework.Media.MediaPlayer.Play(songCollection, track);
-                    Microsoft.Xna.Framework.Media.MediaPlayer.IsShuffled = true;
-                    Microsoft.Xna.Framework.FrameworkDispatcher.Update();
-                    break;
-                }
-            }
-        }
-
+        /// <param name="text">Text to show in progress indicator.</param>
         private void ShowProgressIndicator(string text)
         {
             progressIndicatorTexts.Add(text);
@@ -851,6 +846,12 @@ namespace MusicExplorer
             App.ViewModel.ProgressIndicatorVisible = true;
         }
 
+        /// <summary>
+        /// This method removes provided text from the array of strings of
+        /// which the latest text is shown in progress indicator.
+        /// Indicator is hidden if the array becomes empty. 
+        /// </summary>
+        /// <param name="text">Text to be removed from progress indicator.</param>
         private void HideProgressIndicator(string text)
         {
             progressIndicatorTexts.Remove(text);
@@ -865,800 +866,14 @@ namespace MusicExplorer
             }
         }
 
-        public string GetCountryName(string countryCode)
+        /// <summary>
+        /// Shows MessageBox with Nokia Music API error text
+        /// </summary>
+        void ShowNokiaMusicApiError()
         {
-            string ret = "";
-            if (countryCode == null) return ret;
-
-            countryCode = countryCode.ToLower();
-            for (int i = 0; i < twoLetterCountryCodes.Length; i++)
-            {
-                if (countryCode == twoLetterCountryCodes[i].ToLower())
-                {
-                    ret = CountryNames[i];
-                    break;
-                }
-            }
-            return ret;
+            MessageBox.Show("Nokia Music API error. Please ensure that the "
+                          + "device is connected to Internet and restart "
+                          + "the application.");
         }
-
-        public string GetTwoLetterCountryCode(string threeLetterCountryCode)
-        {
-            string ret = "";
-            if (threeLetterCountryCode == null) return ret;
-
-            threeLetterCountryCode = threeLetterCountryCode.ToLower();
-            for (int i = 0; i < threeLetterCountryCodes.Length; i++)
-            {
-                if (threeLetterCountryCode == threeLetterCountryCodes[i].ToLower())
-                {
-                    ret = twoLetterCountryCodes[i];
-                    break;
-                }
-            }
-            return ret;
-        }
-
-        // implementation based on http://en.wikipedia.org/wiki/ISO_3166-1
-        private string[] threeLetterCountryCodes = 
-        {
-            "AFG",
-            "ALA",
-            "ALB",
-            "DZA",
-            "ASM",
-            "AND",
-            "AGO",
-            "AIA",
-            "ATA",
-            "ATG",
-            "ARG",
-            "ARM",
-            "ABW",
-            "AUS",
-            "AUT",
-            "AZE",
-            "BHS",
-            "BHR",
-            "BGD",
-            "BRB",
-            "BLR",
-            "BEL",
-            "BLZ",
-            "BEN",
-            "BMU",
-            "BTN",
-            "BOL",
-            "BES",
-            "BIH",
-            "BWA",
-            "BVT",
-            "BRA",
-            "IOT",
-            "BRN",
-            "BGR",
-            "BFA",
-            "BDI",
-            "KHM",
-            "CMR",
-            "CAN",
-            "CPV",
-            "CYM",
-            "CAF",
-            "TCD",
-            "CHL",
-            "CHN",
-            "CXR",
-            "CCK",
-            "COL",
-            "COM",
-            "COG",
-            "COD",
-            "COK",
-            "CRI",
-            "CIV",
-            "HRV",
-            "CUB",
-            "CUW",
-            "CYP",
-            "CZE",
-            "DNK",
-            "DJI",
-            "DMA",
-            "DOM",
-            "ECU",
-            "EGY",
-            "SLV",
-            "GNQ",
-            "ERI",
-            "EST",
-            "ETH",
-            "FLK",
-            "FRO",
-            "FJI",
-            "FIN",
-            "FRA",
-            "GUF",
-            "PYF",
-            "ATF",
-            "GAB",
-            "GMB",
-            "GEO",
-            "DEU",
-            "GHA",
-            "GIB",
-            "GRC",
-            "GRL",
-            "GRD",
-            "GLP",
-            "GUM",
-            "GTM",
-            "GGY",
-            "GIN",
-            "GNB",
-            "GUY",
-            "HTI",
-            "HMD",
-            "VAT",
-            "HND",
-            "HKG",
-            "HUN",
-            "ISL",
-            "IND",
-            "IDN",
-            "IRN",
-            "IRQ",
-            "IRL",
-            "IMN",
-            "ISR",
-            "ITA",
-            "JAM",
-            "JPN",
-            "JEY",
-            "JOR",
-            "KAZ",
-            "KEN",
-            "KIR",
-            "PRK",
-            "KOR",
-            "KWT",
-            "KGZ",
-            "LAO",
-            "LVA",
-            "LBN",
-            "LSO",
-            "LBR",
-            "LBY",
-            "LIE",
-            "LTU",
-            "LUX",
-            "MAC",
-            "MKD",
-            "MDG",
-            "MWI",
-            "MYS",
-            "MDV",
-            "MLI",
-            "MLT",
-            "MHL",
-            "MTQ",
-            "MRT",
-            "MUS",
-            "MYT",
-            "MEX",
-            "FSM",
-            "MDA",
-            "MCO",
-            "MNG",
-            "MNE",
-            "MSR",
-            "MAR",
-            "MOZ",
-            "MMR",
-            "NAM",
-            "NRU",
-            "NPL",
-            "NLD",
-            "NCL",
-            "NZL",
-            "NIC",
-            "NER",
-            "NGA",
-            "NIU",
-            "NFK",
-            "MNP",
-            "NOR",
-            "OMN",
-            "PAK",
-            "PLW",
-            "PSE",
-            "PAN",
-            "PNG",
-            "PRY",
-            "PER",
-            "PHL",
-            "PCN",
-            "POL",
-            "PRT",
-            "PRI",
-            "QAT",
-            "REU",
-            "ROU",
-            "RUS",
-            "RWA",
-            "BLM",
-            "SHN",
-            "KNA",
-            "LCA",
-            "MAF",
-            "SPM",
-            "VCT",
-            "WSM",
-            "SMR",
-            "STP",
-            "SAU",
-            "SEN",
-            "SRB",
-            "SYC",
-            "SLE",
-            "SGP",
-            "SXM",
-            "SVK",
-            "SVN",
-            "SLB",
-            "SOM",
-            "ZAF",
-            "SGS",
-            "SSD",
-            "ESP",
-            "LKA",
-            "SDN",
-            "SUR",
-            "SJM",
-            "SWZ",
-            "SWE",
-            "CHE",
-            "SYR",
-            "TWN",
-            "TJK",
-            "TZA",
-            "THA",
-            "TLS",
-            "TGO",
-            "TKL",
-            "TON",
-            "TTO",
-            "TUN",
-            "TUR",
-            "TKM",
-            "TCA",
-            "TUV",
-            "UGA",
-            "UKR",
-            "ARE",
-            "GBR",
-            "USA",
-            "UMI",
-            "URY",
-            "UZB",
-            "VUT",
-            "VEN",
-            "VNM",
-            "VGB",
-            "VIR",
-            "WLF",
-            "ESH",
-            "YEM",
-            "ZMB",
-            "ZWE"
-        };
-
-        // implementation based on http://en.wikipedia.org/wiki/ISO_3166-1
-        private string[] twoLetterCountryCodes = 
-        {
-            "AF",
-            "AX",
-            "AL",
-            "DZ",
-            "AS",
-            "AD",
-            "AO",
-            "AI",
-            "AQ",
-            "AG",
-            "AR",
-            "AM",
-            "AW",
-            "AU",
-            "AT",
-            "AZ",
-            "BS",
-            "BH",
-            "BD",
-            "BB",
-            "BY",
-            "BE",
-            "BZ",
-            "BJ",
-            "BM",
-            "BT",
-            "BO",
-            "BQ",
-            "BA",
-            "BW",
-            "BV",
-            "BR",
-            "IO",
-            "BN",
-            "BG",
-            "BF",
-            "BI",
-            "KH",
-            "CM",
-            "CA",
-            "CV",
-            "KY",
-            "CF",
-            "TD",
-            "CL",
-            "CN",
-            "CX",
-            "CC",
-            "CO",
-            "KM",
-            "CG",
-            "CD",
-            "CK",
-            "CR",
-            "CI",
-            "HR",
-            "CU",
-            "CW",
-            "CY",
-            "CZ",
-            "DK",
-            "DJ",
-            "DM",
-            "DO",
-            "EC",
-            "EG",
-            "SV",
-            "GQ",
-            "ER",
-            "EE",
-            "ET",
-            "FK",
-            "FO",
-            "FJ",
-            "FI",
-            "FR",
-            "GF",
-            "PF",
-            "TF",
-            "GA",
-            "GM",
-            "GE",
-            "DE",
-            "GH",
-            "GI",
-            "GR",
-            "GL",
-            "GD",
-            "GP",
-            "GU",
-            "GT",
-            "GG",
-            "GN",
-            "GW",
-            "GY",
-            "HT",
-            "HM",
-            "VA",
-            "HN",
-            "HK",
-            "HU",
-            "IS",
-            "IN",
-            "ID",
-            "IR",
-            "IQ",
-            "IE",
-            "IM",
-            "IL",
-            "IT",
-            "JM",
-            "JP",
-            "JE",
-            "JO",
-            "KZ",
-            "KE",
-            "KI",
-            "KP",
-            "KR",
-            "KW",
-            "KG",
-            "LA",
-            "LV",
-            "LB",
-            "LS",
-            "LR",
-            "LY",
-            "LI",
-            "LT",
-            "LU",
-            "MO",
-            "MK",
-            "MG",
-            "MW",
-            "MY",
-            "MV",
-            "ML",
-            "MT",
-            "MH",
-            "MQ",
-            "MR",
-            "MU",
-            "YT",
-            "MX",
-            "FM",
-            "MD",
-            "MC",
-            "MN",
-            "ME",
-            "MS",
-            "MA",
-            "MZ",
-            "MM",
-            "NA",
-            "NR",
-            "NP",
-            "NL",
-            "NC",
-            "NZ",
-            "NI",
-            "NE",
-            "NG",
-            "NU",
-            "NF",
-            "MP",
-            "NO",
-            "OM",
-            "PK",
-            "PW",
-            "PS",
-            "PA",
-            "PG",
-            "PY",
-            "PE",
-            "PH",
-            "PN",
-            "PL",
-            "PT",
-            "PR",
-            "QA",
-            "RE",
-            "RO",
-            "RU",
-            "RW",
-            "BL",
-            "SH",
-            "KN",
-            "LC",
-            "MF",
-            "PM",
-            "VC",
-            "WS",
-            "SM",
-            "ST",
-            "SA",
-            "SN",
-            "RS",
-            "SC",
-            "SL",
-            "SG",
-            "SX",
-            "SK",
-            "SI",
-            "SB",
-            "SO",
-            "ZA",
-            "GS",
-            "SS",
-            "ES",
-            "LK",
-            "SD",
-            "SR",
-            "SJ",
-            "SZ",
-            "SE",
-            "CH",
-            "SY",
-            "TW",
-            "TJ",
-            "TZ",
-            "TH",
-            "TL",
-            "TG",
-            "TK",
-            "TO",
-            "TT",
-            "TN",
-            "TR",
-            "TM",
-            "TC",
-            "TV",
-            "UG",
-            "UA",
-            "AE",
-            "GB",
-            "US",
-            "UM",
-            "UY",
-            "UZ",
-            "VU",
-            "VE",
-            "VN",
-            "VG",
-            "VI",
-            "WF",
-            "EH",
-            "YE",
-            "ZM",
-            "ZW",
-        };
-
-        // implementation based on http://en.wikipedia.org/wiki/ISO_3166-1
-        private string[] CountryNames = 
-        {
-            "Afghanistan",
-            "Åland Islands",
-            "Albania",
-            "Algeria",
-            "American Samoa",
-            "Andorra",
-            "Angola",
-            "Anguilla",
-            "Antarctica",
-            "Antigua and Barbuda",
-            "Argentina",
-            "Armenia",
-            "Aruba",
-            "Australia",
-            "Austria",
-            "Azerbaijan",
-            "Bahamas",
-            "Bahrain",
-            "Bangladesh",
-            "Barbados",
-            "Belarus",
-            "Belgium",
-            "Belize",
-            "Benin",
-            "Bermuda",
-            "Bhutan",
-            "Bolivia, Plurinational State of",
-            "Bonaire, Sint Eustatius and Saba",
-            "Bosnia and Herzegovina",
-            "Botswana",
-            "Bouvet Island",
-            "Brazil",
-            "British Indian Ocean Territory",
-            "Brunei Darussalam",
-            "Bulgaria",
-            "Burkina Faso",
-            "Burundi",
-            "Cambodia",
-            "Cameroon",
-            "Canada",
-            "Cape Verde",
-            "Cayman Islands",
-            "Central African Republic",
-            "Chad",
-            "Chile",
-            "China",
-            "Christmas Island",
-            "Cocos (Keeling) Islands",
-            "Colombia",
-            "Comoros",
-            "Congo",
-            "Congo, the Democratic Republic of the",
-            "Cook Islands",
-            "Costa Rica",
-            "Côte d'Ivoire",
-            "Croatia",
-            "Cuba",
-            "Curaçao",
-            "Cyprus",
-            "Czech Republic",
-            "Denmark",
-            "Djibouti",
-            "Dominica",
-            "Dominican Republic",
-            "Ecuador",
-            "Egypt",
-            "El Salvador",
-            "Equatorial Guinea",
-            "Eritrea",
-            "Estonia",
-            "Ethiopia",
-            "Falkland Islands (Malvinas)",
-            "Faroe Islands",
-            "Fiji",
-            "Finland",
-            "France",
-            "French Guiana",
-            "French Polynesia",
-            "French Southern Territories",
-            "Gabon",
-            "Gambia",
-            "Georgia",
-            "Germany",
-            "Ghana",
-            "Gibraltar",
-            "Greece",
-            "Greenland",
-            "Grenada",
-            "Guadeloupe",
-            "Guam",
-            "Guatemala",
-            "Guernsey",
-            "Guinea",
-            "Guinea-Bissau",
-            "Guyana",
-            "Haiti",
-            "Heard Island and McDonald Islands",
-            "Holy See (Vatican City State)",
-            "Honduras",
-            "Hong Kong",
-            "Hungary",
-            "Iceland",
-            "India",
-            "Indonesia",
-            "Iran, Islamic Republic of",
-            "Iraq",
-            "Ireland",
-            "Isle of Man",
-            "Israel",
-            "Italy",
-            "Jamaica",
-            "Japan",
-            "Jersey",
-            "Jordan",
-            "Kazakhstan",
-            "Kenya",
-            "Kiribati",
-            "Korea, Democratic People's Republic of",
-            "Korea, Republic of",
-            "Kuwait",
-            "Kyrgyzstan",
-            "Lao People's Democratic Republic",
-            "Latvia",
-            "Lebanon",
-            "Lesotho",
-            "Liberia",
-            "Libya",
-            "Liechtenstein",
-            "Lithuania",
-            "Luxembourg",
-            "Macao",
-            "Macedonia, The Former Yugoslav Republic of",
-            "Madagascar",
-            "Malawi",
-            "Malaysia",
-            "Maldives",
-            "Mali",
-            "Malta",
-            "Marshall Islands",
-            "Martinique",
-            "Mauritania",
-            "Mauritius",
-            "Mayotte",
-            "Mexico",
-            "Micronesia, Federated States of",
-            "Moldova, Republic of",
-            "Monaco",
-            "Mongolia",
-            "Montenegro",
-            "Montserrat",
-            "Morocco",
-            "Mozambique",
-            "Myanmar",
-            "Namibia",
-            "Nauru",
-            "Nepal",
-            "Netherlands",
-            "New Caledonia",
-            "New Zealand",
-            "Nicaragua",
-            "Niger",
-            "Nigeria",
-            "Niue",
-            "Norfolk Island",
-            "Northern Mariana Islands",
-            "Norway",
-            "Oman",
-            "Pakistan",
-            "Palau",
-            "Palestinian Territory, Occupied",
-            "Panama",
-            "Papua New Guinea",
-            "Paraguay",
-            "Peru",
-            "Philippines",
-            "Pitcairn",
-            "Poland",
-            "Portugal",
-            "Puerto Rico",
-            "Qatar",
-            "Réunion",
-            "Romania",
-            "Russian Federation",
-            "Rwanda",
-            "Saint Barthélemy",
-            "Saint Helena, Ascension and Tristan da Cunha",
-            "Saint Kitts and Nevis",
-            "Saint Lucia",
-            "Saint Martin (French part)",
-            "Saint Pierre and Miquelon",
-            "Saint Vincent and the Grenadines",
-            "Samoa",
-            "San Marino",
-            "Sao Tome and Principe",
-            "Saudi Arabia",
-            "Senegal",
-            "Serbia",
-            "Seychelles",
-            "Sierra Leone",
-            "Singapore",
-            "Sint Maarten (Dutch part)",
-            "Slovakia",
-            "Slovenia",
-            "Solomon Islands",
-            "Somalia",
-            "South Africa",
-            "South Georgia and the South Sandwich Islands",
-            "South Sudan",
-            "Spain",
-            "Sri Lanka",
-            "Sudan",
-            "Suriname",
-            "Svalbard and Jan Mayen",
-            "Swaziland",
-            "Sweden",
-            "Switzerland",
-            "Syrian Arab Republic",
-            "Taiwan, Province of China",
-            "Tajikistan",
-            "Tanzania, United Republic of",
-            "Thailand",
-            "Timor-Leste",
-            "Togo",
-            "Tokelau",
-            "Tonga",
-            "Trinidad and Tobago",
-            "Tunisia",
-            "Turkey",
-            "Turkmenistan",
-            "Turks and Caicos Islands",
-            "Tuvalu",
-            "Uganda",
-            "Ukraine",
-            "United Arab Emirates",
-            "United Kingdom",
-            "United States",
-            "United States Minor Outlying Islands",
-            "Uruguay",
-            "Uzbekistan",
-            "Vanuatu",
-            "Venezuela, Bolivarian Republic of",
-            "Viet Nam",
-            "Virgin Islands, British",
-            "Virgin Islands, U.S.",
-            "Wallis and Futuna",
-            "Western Sahara",
-            "Yemen",
-            "Zambia",
-            "Zimbabwe"
-        };
     }
 }

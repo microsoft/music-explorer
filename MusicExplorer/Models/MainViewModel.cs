@@ -16,105 +16,68 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace MusicExplorer.ViewModels
+namespace MusicExplorer.Models
 {
+    /// <summary>
+    /// MainViewModel - acts as a link between UI and data in models.
+    /// A single view model is used to link all the data models to UI.
+    /// </summary>
     public class MainViewModel : INotifyPropertyChanged
     {
+        // Members
+        public ObservableCollection<ArtistModel> LocalAudio { get; private set; }
+        public ObservableCollection<ArtistModel> Recommendations { get; private set; }
+        public ObservableCollection<ArtistModel> TopArtists { get; private set; }
+        public ObservableCollection<ProductModel> TracksForArtist { get; private set; }
+        public ObservableCollection<ProductModel> AlbumsForArtist { get; private set; }
+        public ObservableCollection<ProductModel> SinglesForArtist { get; private set; }
+        public ObservableCollection<ArtistModel> SimilarForArtist { get; private set; }
+        public ObservableCollection<ProductModel> NewReleases { get; private set; }
+        public ObservableCollection<GenreModel> Genres { get; private set; }
+        public ObservableCollection<ArtistModel> TopArtistsForGenre { get; private set; }
+        public ObservableCollection<MixGroupModel> MixGroups { get; private set; }
+        public ObservableCollection<MixModel> Mixes { get; private set; }
+
+        MediaLibrary mediaLib = null; // For accessing local artists and songs.
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public MainViewModel()
         {
-            this.LocalAudio = new ObservableCollection<ArtistViewModel>();
-            this.Recommendations = new ObservableCollection<ArtistViewModel>();
-            this.NewReleases = new ObservableCollection<ProductViewModel>();
-            this.TopArtists = new ObservableCollection<ArtistViewModel>();
-            this.TracksForArtist = new ObservableCollection<ProductViewModel>();
-            this.AlbumsForArtist = new ObservableCollection<ProductViewModel>();
-            this.SinglesForArtist = new ObservableCollection<ProductViewModel>();
-            this.SimilarForArtist = new ObservableCollection<ArtistViewModel>();
-            this.Genres = new ObservableCollection<GenreViewModel>();
-            this.TopArtistsForGenre = new ObservableCollection<ArtistViewModel>();
-            this.MixGroups = new ObservableCollection<MixGroupViewModel>();
-            this.Mixes = new ObservableCollection<MixViewModel>();
-            this._selectedArtist = null;
-            this._selectedGenre = "";
+            LocalAudio = new ObservableCollection<ArtistModel>();
+            Recommendations = new ObservableCollection<ArtistModel>();
+            NewReleases = new ObservableCollection<ProductModel>();
+            TopArtists = new ObservableCollection<ArtistModel>();
+            TracksForArtist = new ObservableCollection<ProductModel>();
+            AlbumsForArtist = new ObservableCollection<ProductModel>();
+            SinglesForArtist = new ObservableCollection<ProductModel>();
+            SimilarForArtist = new ObservableCollection<ArtistModel>();
+            Genres = new ObservableCollection<GenreModel>();
+            TopArtistsForGenre = new ObservableCollection<ArtistModel>();
+            MixGroups = new ObservableCollection<MixGroupModel>();
+            Mixes = new ObservableCollection<MixModel>();
+
+            SelectedArtist = null;
+            SelectedGenre = "";
+            SelectedMixGroup = "";
 
             // Insert a place holder for title text
-            this.LocalAudio.Add(new ArtistViewModel() { Name = "MusicExplorerTitlePlaceholder", ProportionalHeight = "110", ProportionalWidth = "400" });
+            LocalAudio.Add(new ArtistModel() { 
+                Name = "MusicExplorerTitlePlaceholder", 
+                ItemHeight = "110", 
+                ItemWidth = "400" 
+            });
 
             // Enable flipping of favourites items after launch
-            this.FlipFavourites = true;
+            FlipFavourites = true;
         }
 
+        private ArtistModel _selectedArtist;
         /// <summary>
-        /// A collection for ArtistViewModel objects.
+        /// SelectedArtist property to keep track of user selected artist.
         /// </summary>
-        public ObservableCollection<ArtistViewModel> LocalAudio { get; private set; }
-
-        /// <summary>
-        /// A collection for ArtistViewModel objects.
-        /// </summary>
-        public ObservableCollection<ArtistViewModel> Recommendations { get; private set; }
-
-        /// <summary>
-        /// A collection for ArtistViewModel objects.
-        /// </summary>
-        public ObservableCollection<ArtistViewModel> TopArtists { get; private set; }
-
-        /// <summary>
-        /// A collection for ProductViewModel objects.
-        /// </summary>
-        public ObservableCollection<ProductViewModel> TracksForArtist { get; private set; }
-
-        /// <summary>
-        /// A collection for ProductViewModel objects.
-        /// </summary>
-        public ObservableCollection<ProductViewModel> AlbumsForArtist { get; private set; }
-
-        /// <summary>
-        /// A collection for ProductViewModel objects.
-        /// </summary>
-        public ObservableCollection<ProductViewModel> SinglesForArtist { get; private set; }
-
-        /// <summary>
-        /// A collection for ArtistViewModel objects.
-        /// </summary>
-        public ObservableCollection<ArtistViewModel> SimilarForArtist { get; private set; }
-
-        /// <summary>
-        /// A collection for ProductViewModel objects.
-        /// </summary>
-        public ObservableCollection<ProductViewModel> NewReleases { get; private set; }
-
-        /// <summary>
-        /// A collection for GenreViewModel objects.
-        /// </summary>
-        public ObservableCollection<GenreViewModel> Genres { get; private set; }
-
-        /// <summary>
-        /// A collection for ArtistViewModel objects.
-        /// </summary>
-        public ObservableCollection<ArtistViewModel> TopArtistsForGenre { get; private set; }
-
-        /// <summary>
-        /// A collection for MixGroupViewModel objects.
-        /// </summary>
-        public ObservableCollection<MixGroupViewModel> MixGroups { get; private set; }
-
-        /// <summary>
-        /// A collection for MixViewModel objects.
-        /// </summary>
-        public ObservableCollection<MixViewModel> Mixes { get; private set; }
-
-        /// <summary>
-        /// Medialibrary for accessing local artists and songs.
-        /// </summary>
-        MediaLibrary mediaLib = null;
-
-        private ArtistViewModel _selectedArtist;
-        /// <summary>
-        /// Sample ViewModel property; this property is used in the view to display its value using a Binding
-        /// </summary>
-        /// <returns></returns>
-        public ArtistViewModel SelectedArtist
+        public ArtistModel SelectedArtist
         {
             get
             {
@@ -132,9 +95,9 @@ namespace MusicExplorer.ViewModels
 
         private string _selectedGenre;
         /// <summary>
-        /// MainViewModel's SelectedGenre property; this property is used in the TopArtistsForGenre page to display its value using a Binding
+        /// SelectedGenre property.
+        /// This property is used in the UI to display its value using a Binding.
         /// </summary>
-        /// <returns></returns>
         public string SelectedGenre
         {
             get
@@ -153,9 +116,9 @@ namespace MusicExplorer.ViewModels
 
         private string _selectedMixGroup;
         /// <summary>
-        /// MainViewModel's SelectedMixGroup property; this property is used in the MainPage to decide whether to make a new mix request
+        /// SelectedMixGroup property.
+        /// This property is used in the UI to display its value using a Binding.
         /// </summary>
-        /// <returns></returns>
         public string SelectedMixGroup
         {
             get
@@ -174,9 +137,9 @@ namespace MusicExplorer.ViewModels
 
         private string _progressIndicatorText;
         /// <summary>
-        /// <TODO>MainViewModel's SelectedGenre property; this property is used in the TopArtistsForGenre page to display its value using a Binding
+        /// ProgressIndicatorText property.
+        /// This property is used in the UI to display its value using a Binding.
         /// </summary>
-        /// <returns></returns>
         public string ProgressIndicatorText
         {
             get
@@ -195,9 +158,9 @@ namespace MusicExplorer.ViewModels
 
         private bool _progressIndicatorVisible;
         /// <summary>
-        /// <TODO>MainViewModel's SelectedGenre property; this property is used in the TopArtistsForGenre page to display its value using a Binding
+        /// ProgressIndicatorVisible property.
+        /// This property is used in the UI to display/hide progress indicator using a Binding.
         /// </summary>
-        /// <returns></returns>
         public bool ProgressIndicatorVisible
         {
             get
@@ -216,9 +179,9 @@ namespace MusicExplorer.ViewModels
 
         private bool _flipFavourites;
         /// <summary>
-        /// <TODO>MainViewModel's SelectedGenre property; this property is used in the TopArtistsForGenre page to display its value using a Binding
+        /// FlipFavourites property.
+        /// This property is used in the UI to control flipping of favourites items using a Binding.
         /// </summary>
-        /// <returns></returns>
         public bool FlipFavourites
         {
             get
@@ -237,9 +200,9 @@ namespace MusicExplorer.ViewModels
 
         private Visibility _noFavouritesVisibility = Visibility.Collapsed;
         /// <summary>
-        /// MainViewModel's NoFavouritesVisibility property; this property is used in the MainPage page to show "no favourites available" if necessary
+        /// NoFavouritesVisibility property.
+        /// This property is used in the UI to show "no favourites available" if necessary.
         /// </summary>
-        /// <returns></returns>
         public Visibility NoFavouritesVisibility
         {
             get
@@ -258,9 +221,9 @@ namespace MusicExplorer.ViewModels
 
         private Visibility _noRecommendedVisibility = Visibility.Collapsed;
         /// <summary>
-        /// MainViewModel's NoRecommendedVisibility property; this property is used in the MainPage page to show "no recommendations available" if necessary
+        /// NoRecommendedVisibility property.
+        /// This property is used in the UI to show "no recommendations available" if necessary.
         /// </summary>
-        /// <returns></returns>
         public Visibility NoRecommendedVisibility
         {
             get
@@ -279,9 +242,9 @@ namespace MusicExplorer.ViewModels
 
         private Visibility _noTracksVisibility;
         /// <summary>
-        /// MainViewModel's NoTracksVisibility property; this property is used in the ArtistPivotPage page to show "no tracks available" if necessary
+        /// NoTracksVisibility property.
+        /// This property is used in the UI to show "no tracks available" if necessary.
         /// </summary>
-        /// <returns></returns>
         public Visibility NoTracksVisibility
         {
             get
@@ -300,9 +263,9 @@ namespace MusicExplorer.ViewModels
 
         private Visibility _noAlbumsVisibility;
         /// <summary>
-        /// MainViewModel's NoAlbumsVisibility property; this property is used in the ArtistPivotPage page to show "no albums available" if necessary
+        /// NoAlbumsVisibility property.
+        /// This property is used in the UI to show "no albums available" if necessary.
         /// </summary>
-        /// <returns></returns>
         public Visibility NoAlbumsVisibility
         {
             get
@@ -321,9 +284,9 @@ namespace MusicExplorer.ViewModels
 
         private Visibility _noSinglesVisibility;
         /// <summary>
-        /// MainViewModel's NoSinglesVisibility property; this property is used in the ArtistPivotPage page to show "no singles available" if necessary
+        /// NoSinglesVisibility property.
+        /// This property is used in the UI to show "no singles available" if necessary.
         /// </summary>
-        /// <returns></returns>
         public Visibility NoSinglesVisibility
         {
             get
@@ -342,9 +305,9 @@ namespace MusicExplorer.ViewModels
 
         private Visibility _noSimilarVisibility;
         /// <summary>
-        /// MainViewModel's NoSimilarVisibility property; this property is used in the ArtistPivotPage page to show "no similar artists available" if necessary
+        /// NoSimilarVisibility property.
+        /// This property is used in the UI to show "no similar artists available" if necessary.
         /// </summary>
-        /// <returns></returns>
         public Visibility NoSimilarVisibility
         {
             get
@@ -364,7 +327,6 @@ namespace MusicExplorer.ViewModels
         /// <summary>
         /// MainViewModel's IsDataLoaded property;
         /// </summary>
-        /// <returns></returns>
         public bool IsDataLoaded
         {
             get;
@@ -372,7 +334,7 @@ namespace MusicExplorer.ViewModels
         }
 
         /// <summary>
-        /// Loads local audio information and creates a ViewModel for local artists to be shown in Favourites view.
+        /// Loads local audio information and creates a model for local artists to be shown in Favourites view.
         /// </summary>
         public void LoadData()
         {
@@ -399,14 +361,24 @@ namespace MusicExplorer.ViewModels
                 {
                     if (Convert.ToInt16(LocalAudio[i].PlayCount) < playCount)
                     {
-                        this.LocalAudio.Insert(i, new ArtistViewModel() { Name = artist, TrackCount = Convert.ToString(trackCount), PlayCount = Convert.ToString(playCount) });
+                        this.LocalAudio.Insert(i, new ArtistModel()
+                        { 
+                            Name = artist, 
+                            LocalTrackCount = Convert.ToString(trackCount), 
+                            PlayCount = Convert.ToString(playCount) 
+                        });
                         artistAdded = true;
                         break;
                     }
                 }
                 if (artistAdded == false)
                 {
-                    this.LocalAudio.Add(new ArtistViewModel() { Name = artist, TrackCount = Convert.ToString(trackCount), PlayCount = Convert.ToString(playCount) });
+                    this.LocalAudio.Add(new ArtistModel() 
+                    { 
+                        Name = artist, 
+                        LocalTrackCount = Convert.ToString(trackCount), 
+                        PlayCount = Convert.ToString(playCount) 
+                    });
                 }
 
                 totalTrackCount += trackCount;
@@ -421,28 +393,28 @@ namespace MusicExplorer.ViewModels
                 removeIndex--;
             }
 
-            foreach (ArtistViewModel m in App.ViewModel.LocalAudio)
+            foreach (ArtistModel m in App.ViewModel.LocalAudio)
             {
                 // Divide local artists into two "size categories"
                 if (m.Name == "MusicExplorerTitlePlaceholder") continue;
                 int artistsWithMoreTracks = 0;
-                int trackCount = Convert.ToInt16(m.TrackCount);
+                int trackCount = Convert.ToInt16(m.LocalTrackCount);
                 for (int i = 0; i < App.ViewModel.LocalAudio.Count; i++)
                 {
-                    if (Convert.ToInt16(App.ViewModel.LocalAudio[i].TrackCount) > trackCount)
+                    if (Convert.ToInt16(App.ViewModel.LocalAudio[i].LocalTrackCount) > trackCount)
                         artistsWithMoreTracks++;
                 }
                 double artistRelation = (double)artistsWithMoreTracks / (double)totalArtistCount;
 
                 if (artistRelation < 0.5)
                 {
-                    m.ProportionalHeight = "200";
-                    m.ProportionalWidth = "206";
+                    m.ItemHeight = "200";
+                    m.ItemWidth = "206";
                 }
                 else
                 {
-                    m.ProportionalHeight = "100";
-                    m.ProportionalWidth = "206";
+                    m.ItemHeight = "100";
+                    m.ItemWidth = "206";
                 }
             }
 
@@ -458,6 +430,11 @@ namespace MusicExplorer.ViewModels
             this.IsDataLoaded = true;
         }
 
+        /// <summary>
+        /// Utility function to find out if an artist is present in device.
+        /// </summary>
+        /// <param name="artistName">Name of the artist.</param>
+        /// <returns>true if artist exists in device, false if not.</returns>
         public bool IsLocalArtist(string artistName)
         {
             bool ret = false;

@@ -17,25 +17,32 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 
 using Nokia.Music.Phone;
-using MusicExplorer.ViewModels;
+using MusicExplorer.Models;
 
 namespace MusicExplorer
 {
+    /// Page for displaying mixes in a specific mix group.
     public partial class MixesPage : PhoneApplicationPage
     {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public MixesPage()
         {
             InitializeComponent();
-
-            // Set the data context of the listbox control to the sample data
             DataContext = App.ViewModel;
-
             SystemTray.SetOpacity(this, 0.01);
         }
 
+        /// <summary>
+        /// Called when a mix is selected. 
+        /// Launches the mix through Nokia Music API.
+        /// </summary>
+        /// <param name="sender">MixesList (LongListSelector).</param>
+        /// <param name="e">Event arguments.</param>
         void OnMixSelected(Object sender, SelectionChangedEventArgs e)
         {
-            MixViewModel selectedMix = (MixViewModel)MixesList.SelectedItem;
+            MixModel selectedMix = (MixModel)MixesList.SelectedItem;
             if (selectedMix != null)
             {
                 App.MusicApi.LaunchMix(selectedMix.Id);

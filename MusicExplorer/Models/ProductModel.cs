@@ -13,15 +13,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MusicExplorer.ViewModels
+namespace MusicExplorer.Models
 {
-    public class ProductViewModel : INotifyPropertyChanged
+    /// <summary>
+    /// Data model to hold all the needed data for a product.
+    /// </summary>
+    public class ProductModel : INotifyPropertyChanged
     {
         private string _performers;
         /// <summary>
-        /// ProductViewModel's Performers property; this property is used in the view to display its value using a Binding.
+        /// ProductModel's Performers property.
+        /// This property is used in the UI to display its value using a Binding.
         /// </summary>
-        /// <returns></returns>
         public string Performers
         {
             get
@@ -40,9 +43,9 @@ namespace MusicExplorer.ViewModels
 
         private string _name;
         /// <summary>
-        /// ProductViewModel's Name property; this property is used in the view to display its value using a Binding.
+        /// ProductModel's Name property.
+        /// This property is used in the UI to display its value using a Binding.
         /// </summary>
-        /// <returns></returns>
         public string Name
         {
             get
@@ -61,9 +64,9 @@ namespace MusicExplorer.ViewModels
 
         private string _category;
         /// <summary>
-        /// ProductViewModel's Category property; this property is used in the view to display its value using a Binding.
+        /// ProductModel's Category property.
+        /// This property is used in the UI to display its value using a Binding.
         /// </summary>
-        /// <returns></returns>
         public string Category
         {
             get
@@ -82,9 +85,9 @@ namespace MusicExplorer.ViewModels
 
         private Uri _thumbUri;
         /// <summary>
-        /// ProductViewModel's ThumbUri property; this property is used in the view to display its value using a Binding.
+        /// ProductModel's ThumbUri property.
+        /// This property is used in the UI to display the image in Uri using a Binding.
         /// </summary>
-        /// <returns></returns>
         public Uri ThumbUri
         {
             get
@@ -103,9 +106,9 @@ namespace MusicExplorer.ViewModels
 
         private string _id;
         /// <summary>
-        /// ProductViewModel's Id property; this property is used in some of Nokia Music API methods.
+        /// ProductModel's Id property.
+        /// This property is used in some of Nokia Music API methods.
         /// </summary>
-        /// <returns></returns>
         public string Id
         {
             get

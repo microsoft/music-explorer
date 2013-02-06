@@ -17,12 +17,13 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using MusicExplorer.Resources;
-using MusicExplorer.ViewModels;
+using MusicExplorer.Models;
 
 namespace MusicExplorer
 {
     public partial class App : Application
     {
+        // Members
         private static MusicApi musicApi = null;
         private static MainViewModel viewModel = null;
 

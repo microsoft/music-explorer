@@ -6,6 +6,9 @@
  * See LICENSE.TXT for license information.
  */
 
+using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
+using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,32 +16,36 @@ using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
-using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
 
-using MusicExplorer.ViewModels;
-using Microsoft.Xna.Framework.Media;
+using MusicExplorer.Models;
 
 namespace MusicExplorer
 {
+    /// <summary>
+    /// Page for artist specific information.
+    /// </summary>
     public partial class ArtistPivotPage : PhoneApplicationPage
     {
-        private ApplicationBarIconButton PrevButton;
-        private ApplicationBarIconButton PlayPauseButton;
-        private ApplicationBarIconButton NextButton;
+        // Members
+        private ApplicationBarIconButton prevButton;
+        private ApplicationBarIconButton playPauseButton;
+        private ApplicationBarIconButton nextButton;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public ArtistPivotPage()
         {
             InitializeComponent();
-
-            // Set the data context of the listbox control to the sample data
             DataContext = App.ViewModel;
-
             SystemTray.SetOpacity(this, 0.01);
-
             CreateAppBar();
         }
 
+        /// <summary>
+        /// Formats the page according to artist.
+        /// </summary>
+        /// <param name="e">Event arguments</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
  	        base.OnNavigatedTo(e);
@@ -49,31 +56,52 @@ namespace MusicExplorer
             {
                 PlayLocalSongsButton.Visibility = Visibility.Visible;
             }
-
-            if (MediaPlayer.State == MediaState.Playing)
-            {
-                NowPlayingText.Text = MediaPlayer.Queue.ActiveSong.Artist + " - " + MediaPlayer.Queue.ActiveSong.Name;
-                PlayPauseButton.IconUri = new Uri("/Assets/transport.pause.png", UriKind.Relative);
-                PlayPauseButton.Text = "Pause";
-                ApplicationBar.IsVisible = true;
-            }
         }
 
-        void MediaPlayer_ActiveSongChanged(object sender, EventArgs e)
-        {
-            NowPlayingText.Text = MediaPlayer.Queue.ActiveSong.Artist + " - " + MediaPlayer.Queue.ActiveSong.Name;
-        }
-
+        /// <summary>
+        /// Clears out now playing info.
+        /// </summary>
+        /// <param name="e">Event arguments</param>
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
             NowPlayingText.Text = "";
+            NowPlayingText.Visibility = Visibility.Collapsed;
+            ApplicationBar.IsVisible = false;
         }
 
+        /// <summary>
+        /// Now playing text is changed when active song changes.
+        /// </summary>
+        /// <param name="sender">Media player</param>
+        /// <param name="e">Event arguments</param>
+        void MediaPlayer_ActiveSongChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (NowPlayingText.Visibility == Visibility.Visible)
+                {
+                    NowPlayingText.Text = MediaPlayer.Queue.ActiveSong.Artist.Name
+                                        + " - "
+                                        + MediaPlayer.Queue.ActiveSong.Name;
+                }
+            }
+            catch (Exception)
+            {
+                // It seems that when an artist mix is played, data in 
+                // MediaPlayer becomes invalid -> Exception is thrown.
+                // There's no need to react to it however.
+            }
+        }
 
+        /// <summary>
+        /// Launches Nokia Music Application to the selected product view.
+        /// </summary>
+        /// <param name="sender">LongListSelector - list of tracks</param>
+        /// <param name="e">Event arguments</param>
         void OnTrackSelectionChanged(Object sender, SelectionChangedEventArgs e)
         {
-            ProductViewModel selected = (ProductViewModel)TracksList.SelectedItem;
+            ProductModel selected = (ProductModel)TracksList.SelectedItem;
             if (selected != null)
             {
                 App.MusicApi.LaunchProduct(selected.Id);
@@ -81,9 +109,14 @@ namespace MusicExplorer
             }
         }
 
+        /// <summary>
+        /// Launches Nokia Music Application to the selected product view.
+        /// </summary>
+        /// <param name="sender">LongListSelector - list of albums</param>
+        /// <param name="e">Event arguments</param>
         void OnAlbumSelectionChanged(Object sender, SelectionChangedEventArgs e)
         {
-            ProductViewModel selected = (ProductViewModel)AlbumsList.SelectedItem;
+            ProductModel selected = (ProductModel)AlbumsList.SelectedItem;
             if (selected != null)
             {
                 App.MusicApi.LaunchProduct(selected.Id);
@@ -91,9 +124,14 @@ namespace MusicExplorer
             }
         }
 
+        /// <summary>
+        /// Launches Nokia Music Application to the selected product view.
+        /// </summary>
+        /// <param name="sender">LongListSelector - list of singles</param>
+        /// <param name="e">Event arguments</param>
         void OnSingleSelectionChanged(Object sender, SelectionChangedEventArgs e)
         {
-            ProductViewModel selected = (ProductViewModel)SinglesList.SelectedItem;
+            ProductModel selected = (ProductModel)SinglesList.SelectedItem;
             if (selected != null)
             {
                 App.MusicApi.LaunchProduct(selected.Id);
@@ -101,9 +139,14 @@ namespace MusicExplorer
             }
         }
 
+        /// <summary>
+        /// Launches Nokia Music Application to the selected artist view.
+        /// </summary>
+        /// <param name="sender">LongListSelector - list of similar artists</param>
+        /// <param name="e">Event arguments</param>
         void OnSimilarArtistsSelectionChanged(Object sender, SelectionChangedEventArgs e)
         {
-            ArtistViewModel selected = (ArtistViewModel)SimilarList.SelectedItem;
+            ArtistModel selected = (ArtistModel)SimilarList.SelectedItem;
             if (selected != null)
             {
                 App.MusicApi.LaunchArtist(selected.Id);
@@ -111,58 +154,114 @@ namespace MusicExplorer
             }
         }
 
+        /// <summary>
+        /// Shuffles local artist's songs and starts playback.
+        /// Playback controls are shown along with Now Playing information.
+        /// </summary>
+        /// <param name="sender">Shuffle and play local tracks button</param>
+        /// <param name="e">Event arguments</param>
         private void OnPlayClick(object sender, RoutedEventArgs e)
         {
-            App.MusicApi.PlayLocalArtist(App.ViewModel.SelectedArtist.Name);
+            ShuffleAndPlayLocalArtist(App.ViewModel.SelectedArtist.Name);
             ApplicationBar.IsVisible = true;
             NowPlayingText.Visibility = Visibility.Visible;
         }
 
+        /// <summary>
+        /// Launches Nokia Music Application to the artist view.
+        /// </summary>
+        /// <param name="sender">Show artist in Nokia Music button</param>
+        /// <param name="e">Event arguments</param>
         private void OnShowArtistClick(object sender, RoutedEventArgs e)
         {
             App.MusicApi.LaunchArtist(App.ViewModel.SelectedArtist.Id);
         }
 
+        /// <summary>
+        /// Stops current playback.
+        /// Launches Nokia Music Application to play artist mix.
+        /// </summary>
+        /// <param name="sender">Play artist mix in Nokia Music button</param>
+        /// <param name="e">Event arguments</param>
         private void OnPlayMixClick(object sender, RoutedEventArgs e)
         {
+            MediaPlayer.Stop();
+            playPauseButton.IconUri = new Uri("/Assets/transport.play.png", UriKind.Relative);
+            playPauseButton.Text = "Play";
             App.MusicApi.LaunchArtistMix(App.ViewModel.SelectedArtist.Name);
         }
 
         /// <summary>
-        /// Event handler for clicking prev button.
+        /// Starts playing previous track.
         /// </summary>
+        /// <param name="sender">prev button</param>
+        /// <param name="e">Event arguments</param>
         private void Prev_Click(object sender, EventArgs e)
         {
             MediaPlayer.MovePrevious();
         }
 
         /// <summary>
-        /// Event handler for clicking play/pause button.
+        /// Pauses / Resumes playback of current track.
         /// </summary>
+        /// <param name="sender">play/pause button</param>
+        /// <param name="e">Event arguments</param>
         private void PlayPause_Click(object sender, EventArgs e)
         {
             if (MediaPlayer.State == MediaState.Playing)
             {
                 MediaPlayer.Pause();
-                PlayPauseButton.IconUri = new Uri("/Assets/transport.play.png", UriKind.Relative);
-                PlayPauseButton.Text = "Play";
+                playPauseButton.IconUri = new Uri("/Assets/transport.play.png", UriKind.Relative);
+                playPauseButton.Text = "Play";
             }
             else
             {
                 MediaPlayer.Resume();
-                PlayPauseButton.IconUri = new Uri("/Assets/transport.pause.png", UriKind.Relative);
-                PlayPauseButton.Text = "Pause";
+                playPauseButton.IconUri = new Uri("/Assets/transport.pause.png", UriKind.Relative);
+                playPauseButton.Text = "Pause";
             }
         }
 
         /// <summary>
-        /// Event handler for clicking next button.
+        /// Starts playing next track.
         /// </summary>
+        /// <param name="sender">next button</param>
+        /// <param name="e">Event arguments</param>
         private void Next_Click(object sender, EventArgs e)
         {
             MediaPlayer.MoveNext();
         }
 
+        /// <summary>
+        /// Shuffles the songs of a local artist and starts playback
+        /// </summary>
+        /// <param name="localArtistName">Name of the artist</param>
+        public void ShuffleAndPlayLocalArtist(string localArtistName)
+        {
+            Microsoft.Xna.Framework.Media.MediaLibrary lib =
+                new Microsoft.Xna.Framework.Media.MediaLibrary();
+
+            for (int i = 0; i < lib.Artists.Count; i++)
+            {
+                if (localArtistName == lib.Artists[i].Name)
+                {
+                    // generate a random track index
+                    Random rand = new Random();
+                    int track = rand.Next(0, lib.Artists[i].Songs.Count);
+
+                    Microsoft.Xna.Framework.Media.SongCollection songCollection = lib.Artists[i].Songs;
+                    Microsoft.Xna.Framework.Media.MediaPlayer.Play(songCollection, track);
+                    Microsoft.Xna.Framework.Media.MediaPlayer.IsShuffled = true;
+                    Microsoft.Xna.Framework.FrameworkDispatcher.Update();
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// App bar needs to be created in c# code because of a need
+        /// to dynamically change text and icons in the buttons.
+        /// </summary>
         private void CreateAppBar()
         {
             ApplicationBar = new ApplicationBar();
@@ -172,23 +271,23 @@ namespace MusicExplorer
             ApplicationBar.IsVisible = false;
             ApplicationBar.IsMenuEnabled = false;
 
-            PrevButton = new ApplicationBarIconButton();
-            PrevButton.IconUri = new Uri("/Assets/transport.rew.png", UriKind.Relative);
-            PrevButton.Text = "prev";
-            ApplicationBar.Buttons.Add(PrevButton);
-            PrevButton.Click += new EventHandler(Prev_Click);
+            prevButton = new ApplicationBarIconButton();
+            prevButton.IconUri = new Uri("/Assets/transport.rew.png", UriKind.Relative);
+            prevButton.Text = "prev";
+            ApplicationBar.Buttons.Add(prevButton);
+            prevButton.Click += new EventHandler(Prev_Click);
 
-            PlayPauseButton = new ApplicationBarIconButton();
-            PlayPauseButton.IconUri = new Uri("/Assets/transport.pause.png", UriKind.Relative);
-            PlayPauseButton.Text = "pause";
-            ApplicationBar.Buttons.Add(PlayPauseButton);
-            PlayPauseButton.Click += new EventHandler(PlayPause_Click);
+            playPauseButton = new ApplicationBarIconButton();
+            playPauseButton.IconUri = new Uri("/Assets/transport.pause.png", UriKind.Relative);
+            playPauseButton.Text = "pause";
+            ApplicationBar.Buttons.Add(playPauseButton);
+            playPauseButton.Click += new EventHandler(PlayPause_Click);
 
-            NextButton = new ApplicationBarIconButton();
-            NextButton.IconUri = new Uri("/Assets/transport.ff.png", UriKind.Relative);
-            NextButton.Text = "next";
-            ApplicationBar.Buttons.Add(NextButton);
-            NextButton.Click += new EventHandler(Next_Click);
+            nextButton = new ApplicationBarIconButton();
+            nextButton.IconUri = new Uri("/Assets/transport.ff.png", UriKind.Relative);
+            nextButton.Text = "next";
+            ApplicationBar.Buttons.Add(nextButton);
+            nextButton.Click += new EventHandler(Next_Click);
         }
     }
 }

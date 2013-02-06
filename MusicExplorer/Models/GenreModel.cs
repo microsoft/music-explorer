@@ -13,15 +13,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MusicExplorer.ViewModels
+namespace MusicExplorer.Models
 {
-    public class GenreViewModel : INotifyPropertyChanged
+    /// <summary>
+    /// Data model to hold all the needed data for a genre.
+    /// </summary>
+    public class GenreModel : INotifyPropertyChanged
     {
         private string _name;
         /// <summary>
-        /// Genre's Name property; this property is used in the view to display its value using a Binding.
+        /// Genre's Name property.
+        /// This property is used in the UI to display its value using a Binding.
         /// </summary>
-        /// <returns></returns>
         public string Name
         {
             get
@@ -40,9 +43,9 @@ namespace MusicExplorer.ViewModels
 
         private string _id;
         /// <summary>
-        /// Genres Id property; this property is used in some of Nokia Music API methods.
+        /// Genres Id property.
+        /// This property is used in some of Nokia Music API methods.
         /// </summary>
-        /// <returns></returns>
         public string Id
         {
             get

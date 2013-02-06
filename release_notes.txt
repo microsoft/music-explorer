@@ -52,7 +52,7 @@ Music API related features by trying out the application.
  |  |
  |  |- Resources      Application resources.
  |  |
- |  |- ViewModels     ViewModels to bind data and user interface.
+ |  |- Models         MainViewModel and models to bind data and user interface.
 
 
 3.2 Important files and classes
@@ -75,7 +75,7 @@ Music API related features by trying out the application.
 | MusicApi.cs                    | Class responsible of communicating with    |
 |                                | the Nokia Music API.                       |
 |--------------------------------|--------------------------------------------|
-| MainViewModel.cs               | Contains all view models for the app.      |
+| MainViewModel.cs               | Binds data and user interface.             |
 |                                |                                            |
 |--------------------------------|--------------------------------------------|
 
@@ -97,8 +97,10 @@ Music API related features by trying out the application.
 3.3 Used APIs/Windows Phone Components
 --------------------------------------
 
-Microsoft.Phone.Maps.Services;
+Microsoft.Phone.Maps.Services
 Microsoft.Phone.Controls.Toolkit
+Microsoft.Xna.Framework
+Microsoft.Xna.Framework.Media
 Newtonsoft.Json
 Nokia.Music.Wp8
 System.Device.Location

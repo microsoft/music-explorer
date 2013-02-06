@@ -16,25 +16,32 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 
-using MusicExplorer.ViewModels;
+using MusicExplorer.Models;
 
 namespace MusicExplorer
 {
+    /// Page for displaying top artists in a specific genre.
+    /// </summary>
     public partial class TopArtistsForGenrePage : PhoneApplicationPage
     {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public TopArtistsForGenrePage()
         {
             InitializeComponent();
-
-            // Set the data context of the listbox control to the sample data
             DataContext = App.ViewModel;
-
             SystemTray.SetOpacity(this, 0.01);
         }
 
+        /// <summary>
+        /// Called when an artist is selected. Opens up ArtistPivotPage.
+        /// </summary>
+        /// <param name="sender">TopArtistsForGenreList (LongListSelector).</param>
+        /// <param name="e">Event arguments.</param>
         void OnArtistSelected(Object sender, SelectionChangedEventArgs e)
         {
-            ArtistViewModel selected = (ArtistViewModel)TopArtistsForGenreList.SelectedItem;
+            ArtistModel selected = (ArtistModel)TopArtistsForGenreList.SelectedItem;
             if (selected != null)
             {
                 if (selected != App.ViewModel.SelectedArtist)

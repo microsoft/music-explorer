@@ -58,7 +58,7 @@
         <!--Pivot Control-->
         <phone:Pivot x:Name="TitleText" Title="MUSIC EXPLORER">
             
-            <!--Pivot item one-->
+            <!--Details Item-->
             <phone:PivotItem Header="details">
                 <Grid>
                     <StackPanel>
@@ -103,7 +103,7 @@
                 </Grid>
             </phone:PivotItem>
 
-            <!--Pivot item two-->
+            <!--Tracks Item-->
             <phone:PivotItem Header="tracks">
                 <Grid>
                     <TextBlock Margin="0,50,0,0" FontSize="24" Text="No tracks available" HorizontalAlignment="Center" Visibility="{Binding NoTracksVisibility}"></TextBlock>
@@ -127,7 +127,7 @@
                 </Grid>
             </phone:PivotItem>
 
-            <!--Pivot item three-->
+            <!--Albums Item-->
             <phone:PivotItem Header="albums">
                 <Grid>
                     <TextBlock Margin="0,50,0,0" FontSize="24" Text="No albums available" HorizontalAlignment="Center" Visibility="{Binding NoAlbumsVisibility}"></TextBlock>
@@ -151,7 +151,7 @@
                 </Grid>
             </phone:PivotItem>
 
-            <!--Pivot item four-->
+            <!--Singles Item-->
             <phone:PivotItem Header="singles">
                 <Grid>
                     <TextBlock Margin="0,50,0,0" FontSize="24" Text="No singles available" HorizontalAlignment="Center" Visibility="{Binding NoSinglesVisibility}"></TextBlock>
@@ -175,7 +175,7 @@
                 </Grid>
             </phone:PivotItem>
 
-            <!--Pivot item five-->
+            <!--Similar Item-->
             <phone:PivotItem Header="similar">
                 <Grid>
                     <TextBlock Margin="0,50,0,0" FontSize="24" Text="No similar artists available" HorizontalAlignment="Center" Visibility="{Binding NoSimilarVisibility}"></TextBlock>

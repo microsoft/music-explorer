@@ -11,25 +11,40 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace MusicExplorer
 {
+    /// <summary>
+    /// This class represents flipable artist item in Favourites view.
+    /// The front side contains artist name and track count, and the
+    /// backside contains an image of the artist (if available - default
+    /// image is shown if no image is found for an artist).
+    /// </summary>
     public partial class FlipableItem : UserControl
     {
-        System.Windows.Threading.DispatcherTimer flipTimer = null;
+        // Members
+        private DispatcherTimer flipTimer = null;
+        private bool backSideShown = false;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public FlipableItem()
         {
             InitializeComponent();
-
             TiltEffect.TiltableItems.Add(typeof(FlipableItem));
-
             SetupFlipTimer();
         }
 
+        /// <summary>
+        /// Make additional formatting depending on data.
+        /// </summary>
         void OnLoaded(Object sender, RoutedEventArgs e)
         {
             ApplyTemplate();
+
+            // Special case - "Favourites" Title is in fact a FlipableItem
             if (FrontPrimaryText == "MusicExplorerTitlePlaceholder")
             {
                 FrontSide.Visibility = Visibility.Collapsed;
@@ -38,6 +53,8 @@ namespace MusicExplorer
                 StopFlip();
                 return;
             }
+
+            // Track(s) text depends on the track count
             FrontSide.Visibility = Visibility.Visible;
             if (Int32.Parse(FrontSecondaryText) == 1)
             {
@@ -49,6 +66,9 @@ namespace MusicExplorer
             }
         }
 
+        /// <summary>
+        /// Starts to flip the item in 5 second interval.
+        /// </summary>
         private void SetupFlipTimer()
         {
             if (flipTimer == null)
@@ -64,6 +84,10 @@ namespace MusicExplorer
             }
         }
 
+        /// <summary>
+        /// A delay depending on the track count of the artist is used
+        /// to introduce some variation to the time when the items flip.
+        /// </summary>
         private void StartFlip()
         {
             double startDelay = Int32.Parse(FrontSecondaryText) * 100;
@@ -74,6 +98,9 @@ namespace MusicExplorer
             Flip(startDelay);
         }
 
+        /// <summary>
+        /// Stops flipping the item.
+        /// </summary>
         private void StopFlip()
         {
             if (flipTimer != null && flipTimer.IsEnabled)
@@ -82,6 +109,54 @@ namespace MusicExplorer
             }
         }
 
+        /// <summary>
+        /// Flips the item using one of two storyboards, front to back or
+        /// back to front.
+        /// </summary>
+        public void Flip(double startDelayMs = 0)
+        {
+            if (!App.ViewModel.FlipFavourites || BackImage == null || BackImage.Length <= 0) return;
+            try
+            {
+                // Start the flipping animation after the specified duration.
+                TimeSpan startTime = TimeSpan.FromMilliseconds(startDelayMs);
+                if (backSideShown)
+                {
+                    FlipBackToFrontSB.BeginTime = startTime;
+                    FlipBackToFrontSB.Begin();
+                    FlipBackToFrontSB.Completed += (sender, args) => backSideShown = false;
+                }
+                else
+                {
+                    FlipFrontToBackSB.BeginTime = startTime;
+                    FlipFrontToBackSB.Begin();
+                    FlipFrontToBackSB.Completed += (sender, args) => backSideShown = true;
+                }
+            }
+            catch (Exception /*ex*/)
+            {
+            }
+        }
+
+        /// <summary>
+        /// Stops currently ongoing flip animation.
+        /// </summary>
+        public void Stop()
+        {
+            try
+            {
+                FlipFrontToBackSB.Stop();
+                FlipBackToFrontSB.Stop();
+                backSideShown = false;
+            }
+            catch (Exception /*ex*/)
+            {
+            }
+        }
+
+        /// <summary>
+        /// ItemWidth property to enable binding.
+        /// </summary>
         public static readonly DependencyProperty ItemWidthProperty =
             DependencyProperty.Register("ItemWidth", typeof(string), typeof(FlipableItem), null);
         public string ItemWidth
@@ -96,6 +171,9 @@ namespace MusicExplorer
             }
         }
 
+        /// <summary>
+        /// ItemHeight property to enable binding.
+        /// </summary>
         public static readonly DependencyProperty ItemHeightProperty =
             DependencyProperty.Register("ItemHeight", typeof(string), typeof(FlipableItem), null);
         public string ItemHeight
@@ -110,6 +188,9 @@ namespace MusicExplorer
             }
         }
 
+        /// <summary>
+        /// FrontyPrimaryText property to enable binding. Name of the artist.
+        /// </summary>
         public static readonly DependencyProperty FrontPrimaryTextProperty =
             DependencyProperty.Register("FrontPrimaryText", typeof(string), typeof(FlipableItem), null);
         public string FrontPrimaryText
@@ -124,6 +205,9 @@ namespace MusicExplorer
             }
         }
 
+        /// <summary>
+        /// FrontSecondaryText property to enable binding. Track count.
+        /// </summary>
         public static readonly DependencyProperty FrontSecondaryTextProperty =
             DependencyProperty.Register("FrontSecondaryText", typeof(string), typeof(FlipableItem), null);
         public string FrontSecondaryText
@@ -138,6 +222,9 @@ namespace MusicExplorer
             }
         }
 
+        /// <summary>
+        /// BackImage property to enable binding. Artist image.
+        /// </summary>
         public static readonly DependencyProperty BackImageProperty =
             DependencyProperty.Register("BackImage", typeof(string), typeof(FlipableItem), null);
         public string BackImage
@@ -151,60 +238,5 @@ namespace MusicExplorer
                 SetValue(BackImageProperty, value);
             }
         }
-
-        public event EventHandler<Visibility> VisibilityChanged;
-
-        public void Flip(double startDelayMs = 0)
-        {
-            if (!App.ViewModel.FlipFavourites || BackImage == null || BackImage.Length <= 0) return;
-            try
-            {
-                // Start the flipping animation after the specified duration.
-                TimeSpan startTime = TimeSpan.FromMilliseconds(startDelayMs);
-                if (_backSideShown)
-                {
-                    FlipBackToFrontSB.BeginTime = startTime;
-                    FlipBackToFrontSB.Begin();
-                    FlipBackToFrontSB.Completed += (sender, args) => _backSideShown = false;
-                }
-                else
-                {
-                    FlipFrontToBackSB.BeginTime = startTime;
-                    FlipFrontToBackSB.Begin();
-                    FlipFrontToBackSB.Completed += (sender, args) => _backSideShown = true;
-                }
-            }
-            catch (Exception /*ex*/)
-            {
-            }
-        }
-
-        public void Stop()
-        {
-            try
-            {
-                FlipFrontToBackSB.Stop();
-                FlipBackToFrontSB.Stop();
-                _backSideShown = false;
-            }
-            catch (Exception /*ex*/)
-            {
-            }
-        }
-
-        private void Image_Opened(object sender, RoutedEventArgs e)
-        {
-            if (LayoutRoot.Visibility == Visibility.Collapsed)
-            {
-                LayoutRoot.Visibility = Visibility.Visible;
-                EventHandler<Visibility> handler = VisibilityChanged;
-                if (handler != null)
-                {
-                    VisibilityChanged(this, LayoutRoot.Visibility);
-                }
-            }
-        }
-
-        private bool _backSideShown = false;
     }
 }

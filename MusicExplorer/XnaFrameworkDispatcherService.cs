@@ -11,13 +11,22 @@ using Microsoft.Xna.Framework;
 using System.Windows;
 using System;
 
-// implementation according to http://msdn.microsoft.com/library/ff842408.aspx
 namespace MusicExplorer
 {
+    /// <summary>
+    /// Class needed to handle XNA Framework event messages, placed in a queue
+    /// that is processed by the XNA FrameworkDispatcher. MediaPlayer, 
+    /// MediaLibrary and related classes depend on XNA framework.
+    /// Implementation from http://msdn.microsoft.com/library/ff842408.aspx
+    /// </summary>
     public class XNAFrameworkDispatcherService : IApplicationService
     {
+        // Members
         private DispatcherTimer frameworkDispatcherTimer;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public XNAFrameworkDispatcherService()
         {
             this.frameworkDispatcherTimer = new DispatcherTimer();
@@ -26,16 +35,25 @@ namespace MusicExplorer
             FrameworkDispatcher.Update();
         }
 
+        /// <summary>
+        /// Calls FrameworkDispatcher.Update()
+        /// </summary>
         void frameworkDispatcherTimer_Tick(object sender, EventArgs e)
         {
             FrameworkDispatcher.Update();
         }
 
+        /// <summary>
+        /// Starts the dispatcher timer.
+        /// </summary>
         void IApplicationService.StartService(ApplicationServiceContext context)
         {
             this.frameworkDispatcherTimer.Start();
         }
 
+        /// <summary>
+        /// Stops the dispatcher timer.
+        /// </summary>
         void IApplicationService.StopService()
         {
             this.frameworkDispatcherTimer.Stop();

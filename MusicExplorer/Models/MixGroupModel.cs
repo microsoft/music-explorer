@@ -13,15 +13,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MusicExplorer.ViewModels
+namespace MusicExplorer.Models
 {
-    public class MixViewModel : INotifyPropertyChanged
+    /// <summary>
+    /// Data model to hold all the needed data for a mix group.
+    /// </summary>
+    public class MixGroupModel : INotifyPropertyChanged
     {
         private string _name;
         /// <summary>
-        /// MixViewModel's Name property; this property is used in the view to display its value using a Binding.
+        /// MixGroup's Name property.
+        /// This property is used in the UI to display its value using a Binding.
         /// </summary>
-        /// <returns></returns>
         public string Name
         {
             get
@@ -38,32 +41,11 @@ namespace MusicExplorer.ViewModels
             }
         }
 
-        private string _parentalAdvisory;
-        /// <summary>
-        /// MixViewModel's ParentalAdvisory property; this property is used in the view to display its value using a Binding.
-        /// </summary>
-        /// <returns></returns>
-        public string ParentalAdvisory
-        {
-            get
-            {
-                return _parentalAdvisory;
-            }
-            set
-            {
-                if (value != _parentalAdvisory)
-                {
-                    _parentalAdvisory = value;
-                    NotifyPropertyChanged("ParentalAdvisory");
-                }
-            }
-        }
-
         private string _id;
         /// <summary>
-        /// MixViewModel's Id property; this property is used in some of Nokia Music API methods.
+        /// MixGroup's Id property.
+        /// This property is used in some of Nokia Music API methods.
         /// </summary>
-        /// <returns></returns>
         public string Id
         {
             get
@@ -76,27 +58,6 @@ namespace MusicExplorer.ViewModels
                 {
                     _id = value;
                     NotifyPropertyChanged("Id");
-                }
-            }
-        }
-
-        private Uri _thumbUri;
-        /// <summary>
-        /// MixViewModel's ThumbUri property; this property is used in the view to display its value using a Binding.
-        /// </summary>
-        /// <returns></returns>
-        public Uri ThumbUri
-        {
-            get
-            {
-                return _thumbUri;
-            }
-            set
-            {
-                if (value != _thumbUri)
-                {
-                    _thumbUri = value;
-                    NotifyPropertyChanged("ThumbUri");
                 }
             }
         }

@@ -5,6 +5,7 @@
  or trade names of their respective owners. 
  See LICENSE.TXT for license information.
 -->
+    
 <phone:PhoneApplicationPage
     x:Class="MusicExplorer.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -46,7 +47,7 @@
                 <ImageBrush ImageSource="/MusicExplorer;component/Assets/music_explorer_panorama_bg.jpg"/>
             </phone:Panorama.Background>
 
-            <!--Panorama item one-->
+            <!--Favourites Item-->
             <phone:PanoramaItem>
                 <Grid>
                     <TextBlock Margin="12,68,0,0" FontSize="24" TextWrapping="Wrap" Text="No local songs available for creating favourites list. Favourites list shows 20 artists with the most played songs." HorizontalAlignment="Center" Visibility="{Binding NoFavouritesVisibility}"></TextBlock>
@@ -59,11 +60,11 @@
 
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <controls:FlipableItem Height="{Binding ProportionalHeight}"
-                                                   Width="{Binding ProportionalWidth}"
-                                                   ItemWidth="{Binding ProportionalWidth}"
+                                <controls:FlipableItem Height="{Binding ItemHeight}"
+                                                   Width="{Binding ItemWidth}"
+                                                   ItemWidth="{Binding ItemWidth}"
                                                    FrontPrimaryText="{Binding Name}" 
-                                                   FrontSecondaryText="{Binding TrackCount}"
+                                                   FrontSecondaryText="{Binding LocalTrackCount}"
                                                    BackImage="{Binding ThumbUri}"/>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -71,7 +72,7 @@
                 </Grid>
             </phone:PanoramaItem>
 
-            <!--Panorama two-->
+            <!--Recommended Item-->
             <phone:PanoramaItem>
                 <Grid>
                     <TextBlock Margin="12,68,0,0" FontSize="24" TextWrapping="Wrap" Text="No recommendations available. List of recommended artists is created based on your favourite artists." HorizontalAlignment="Center" Visibility="{Binding NoRecommendedVisibility}"></TextBlock>
@@ -108,7 +109,7 @@
                 </Grid>
             </phone:PanoramaItem>
 
-            <!--Panorama item three-->
+            <!--What's New Item-->
             <phone:PanoramaItem>
                 <phone:LongListSelector x:Name="NewReleasesList" Margin="0,-38,-22,2" ItemsSource="{Binding NewReleases}" SelectionChanged="OnNewReleasesSelectionChanged" toolkit:TiltEffect.IsTiltEnabled="True">
                     <phone:LongListSelector.ListHeaderTemplate>
@@ -143,7 +144,7 @@
                 </phone:LongListSelector>
             </phone:PanoramaItem>
 
-            <!--Panorama item four-->
+            <!--Who's Hot Item-->
             <phone:PanoramaItem>
                 <phone:LongListSelector x:Name="TopArtistsList" Margin="0,-38,-22,2" ItemsSource="{Binding TopArtists}" SelectionChanged="OnTopArtistsSelectionChanged" toolkit:TiltEffect.IsTiltEnabled="True">
                     <phone:LongListSelector.ListHeaderTemplate>
@@ -175,7 +176,7 @@
                 </phone:LongListSelector>
             </phone:PanoramaItem>
 
-            <!--Panorama item five-->
+            <!--Genres Item-->
             <phone:PanoramaItem>
                 <phone:LongListSelector x:Name="GenresList" Margin="0,-38,-22,2" ItemsSource="{Binding Genres}" SelectionChanged="OnGenresSelectionChanged" toolkit:TiltEffect.IsTiltEnabled="True">
                     <phone:LongListSelector.ListHeaderTemplate>
@@ -204,7 +205,7 @@
                 </phone:LongListSelector>
             </phone:PanoramaItem>
 
-            <!--Panorama item six-->
+            <!--Mixes Item-->
             <phone:PanoramaItem>
                 <phone:LongListSelector x:Name="MixGroupsList" Margin="0,-38,-22,2" ItemsSource="{Binding MixGroups}" SelectionChanged="OnMixGroupsSelectionChanged" toolkit:TiltEffect.IsTiltEnabled="True">
                     <phone:LongListSelector.ListHeaderTemplate>

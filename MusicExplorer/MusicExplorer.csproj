@@ -99,6 +99,7 @@
     <Compile Include="ArtistPivotPage.xaml.cs">
       <DependentUpon>ArtistPivotPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CountryCodes.cs" />
     <Compile Include="FlipableItem.xaml.cs">
       <DependentUpon>FlipableItem.xaml</DependentUpon>
     </Compile>
@@ -119,12 +120,12 @@
     <Compile Include="TopArtistsForGenrePage.xaml.cs">
       <DependentUpon>TopArtistsForGenrePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\ArtistViewModel.cs" />
-    <Compile Include="ViewModels\GenreViewModel.cs" />
-    <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="ViewModels\MixGroupViewModel.cs" />
-    <Compile Include="ViewModels\MixViewModel.cs" />
-    <Compile Include="ViewModels\ProductViewModel.cs" />
+    <Compile Include="Models\ArtistModel.cs" />
+    <Compile Include="Models\GenreModel.cs" />
+    <Compile Include="Models\MainViewModel.cs" />
+    <Compile Include="Models\MixGroupModel.cs" />
+    <Compile Include="Models\MixModel.cs" />
+    <Compile Include="Models\ProductModel.cs" />
     <Compile Include="XnaFrameworkDispatcherService.cs" />
   </ItemGroup>
   <ItemGroup>
