@@ -4,7 +4,7 @@ Music Explorer
 Music Explorer is a Nokia Developer example application demonstrating the use of
 Nokia Music API together with standard Windows Phone 8 audio features to create
 an immersive music experience. It shows how to take advantage of Nokia Music API
-features such as searching for artists by name, requesting top artists and
+features such as searching for artists by name and requesting top artists and
 new releases, and it also shows how to launch Nokia Music application from
 within another application to play mix radio or show artist/product information.  
 
@@ -188,5 +188,6 @@ describes the properties and usage of Nokia Music API in detail.
 8. Version history
 -------------------------------------------------------------------------------
 
-0.3.0.0 public beta release.
-
+1.0.0.0 First release
+0.4.0.0 Minor fixes
+0.3.0.0 Public beta
