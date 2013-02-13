@@ -9,6 +9,7 @@
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Maps.Services;
 using Microsoft.Phone.Shell;
+using Nokia.Music.Phone;
 using System;
 using System.Collections.Generic;
 using System.Device.Location;
@@ -32,8 +33,9 @@ namespace MusicExplorer
     public partial class MainPage : PhoneApplicationPage
     {
         // Members
-        DispatcherTimer localAudioTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.3) };
-        DispatcherTimer geoTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+        private DispatcherTimer timeoutTimer = 
+            new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.1) };
+        private CountryResolver resolver = null;
 
         /// <summary>
         /// Constructor.
@@ -43,28 +45,6 @@ namespace MusicExplorer
             InitializeComponent();
             DataContext = App.ViewModel;
             SystemTray.SetOpacity(this, 0.01);
-        }
-
-        /// <summary>
-        /// Instructs ViewModel to load local artists information.
-        /// </summary>
-        /// <param name="sender">Local audio timer</param>
-        /// <param name="e">Event arguments</param>
-        private void LocalAudioTimerTick(object sender, EventArgs e)
-        {
-            localAudioTimer.Stop();
-            App.ViewModel.LoadData();
-        }
-
-        /// <summary>
-        /// Gets current GeoCoordinate needed when initializing Nokia Music API.
-        /// </summary>
-        /// <param name="sender">Geo timer</param>
-        /// <param name="e">Event arguments</param>
-        private void GeoTimerTick(object sender, EventArgs e)
-        {
-            geoTimer.Stop();
-            GetCurrentCoordinate();
         }
 
         /// <summary>
@@ -78,12 +58,37 @@ namespace MusicExplorer
 
             if (!App.ViewModel.IsDataLoaded)
             {
-                localAudioTimer.Tick += LocalAudioTimerTick;
-                localAudioTimer.Start();
-
-                geoTimer.Tick += GeoTimerTick;
-                geoTimer.Start();
+                timeoutTimer.Tick += LoadLocalData;
+                timeoutTimer.Start();
             }
+        }
+
+        /// <summary>
+        /// Instructs ViewModel to load local artist information.
+        /// </summary>
+        /// <param name="sender">Timeout timer</param>
+        /// <param name="e">Event arguments</param>
+        private void LoadLocalData(object sender, EventArgs e)
+        {
+            timeoutTimer.Stop();
+            timeoutTimer.Tick -= LoadLocalData;
+
+            App.ViewModel.LoadData();
+
+            timeoutTimer.Tick += GetCurrentLocation;
+            timeoutTimer.Start();
+        }
+
+        /// <summary>
+        /// Begins the procedure to get current location needed when 
+        /// initializing Nokia Music API.
+        /// </summary>
+        /// <param name="sender">Geo timer</param>
+        /// <param name="e">Event arguments</param>
+        private void GetCurrentLocation(object sender, EventArgs e)
+        {
+            timeoutTimer.Stop();
+            GetCurrentCoordinate();
         }
 
         /// <summary>
@@ -301,16 +306,39 @@ namespace MusicExplorer
         }
 
         /// <summary>
-        /// Makes the inital requests to Nokia Music API to fill view models.
+        /// Checks the availability of Nokia Music in a locale.
+        /// Initializes Nokia Music API if it is available.
         /// </summary>
+        /// <param name="twoLetterCountryCode">An ISO 3166-2 country code</param>
         private void InitializeNokiaMusicApi(string twoLetterCountryCode)
         {
-            App.MusicApi.Initialize(twoLetterCountryCode);
-            App.MusicApi.GetArtistInfoForLocalAudio();
-            App.MusicApi.GetNewReleases();
-            App.MusicApi.GetTopArtists();
-            App.MusicApi.GetGenres();
-            App.MusicApi.GetMixGroups();
+            if (resolver == null)
+            {
+                resolver = new CountryResolver(MusicApi.MUSIC_EXPLORER_APP_ID,
+                                               MusicApi.MUSIC_EXPLORER_APP_TOKEN);
+            }
+
+            resolver.CheckAvailability((Response<bool> response) =>
+            {
+                Deployment.Current.Dispatcher.BeginInvoke(() =>
+                {
+                    if (response.Result)
+                    {
+                        // Make initial requests to fill models
+                        App.MusicApi.Initialize(twoLetterCountryCode);
+                        App.MusicApi.GetArtistInfoForLocalAudio();
+                        App.MusicApi.GetNewReleases();
+                        App.MusicApi.GetTopArtists();
+                        App.MusicApi.GetGenres();
+                        App.MusicApi.GetMixGroups();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Sorry, Nokia Music is not available in this locale.");
+                    }
+                });
+            },
+            twoLetterCountryCode.ToLower());
         }
 
         /// <summary>
