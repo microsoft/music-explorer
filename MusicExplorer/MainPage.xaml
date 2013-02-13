@@ -50,7 +50,9 @@
             <!--Favourites Item-->
             <phone:PanoramaItem>
                 <Grid>
-                    <TextBlock Margin="12,68,0,0" FontSize="24" TextWrapping="Wrap" Text="No local songs available for creating favourites list. Favourites list shows 20 artists with the most played songs." HorizontalAlignment="Center" Visibility="{Binding NoFavouritesVisibility}"></TextBlock>
+                    <TextBlock Margin="12,68,0,0" FontSize="24" TextWrapping="Wrap" 
+                               Text="No local songs available for creating favourites list. Favourites list shows 20 artists with the most played songs." 
+                               HorizontalAlignment="Center" Visibility="{Binding NoFavouritesVisibility}"></TextBlock>
                     <ListBox Margin="0,-38, -22,2" x:Name="LocalAudioList" ItemsSource="{Binding LocalAudio}" SelectionChanged="OnFavoriteSelectionChanged">
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -97,9 +99,13 @@
                                     <StackPanel Orientation="Horizontal" Margin="12,2,0,4" Height="105" Width="432">
                                         <Image Width="100" Height="100" Source="{Binding ThumbUri}"/>
                                         <StackPanel Width="311" Margin="8,-7,0,0">
-                                            <TextBlock Text="{Binding Name}" Margin="10,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
-                                            <TextBlock Text="{Binding Country}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
-                                            <TextBlock Text="{Binding Genres}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                                            <TextBlock Text="{Binding Name}" Margin="10,0" 
+                                                       Style="{StaticResource PhoneTextExtraLargeStyle}" 
+                                                       FontSize="{StaticResource PhoneFontSizeLarge}" />
+                                            <TextBlock Text="{Binding Country}" Margin="10,-2,10,0" 
+                                                       Style="{StaticResource PhoneTextSubtleStyle}" />
+                                            <TextBlock Text="{Binding Genres}" Margin="10,-2,10,0" 
+                                                       Style="{StaticResource PhoneTextSubtleStyle}" />
                                         </StackPanel>
                                     </StackPanel>
                                 </Grid>
@@ -132,9 +138,13 @@
                                 <StackPanel Orientation="Horizontal" Margin="12,2,0,4" Height="105" Width="432">
                                     <Image Width="100" Height="100" Source="{Binding ThumbUri}"/>
                                     <StackPanel Width="311" Margin="8,-7,0,0">
-                                        <TextBlock Text="{Binding Performers}" Margin="10,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
-                                        <TextBlock Text="{Binding Name}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
-                                        <TextBlock Text="{Binding Category}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                                        <TextBlock Text="{Binding Performers}" Margin="10,0" 
+                                                   Style="{StaticResource PhoneTextExtraLargeStyle}" 
+                                                   FontSize="{StaticResource PhoneFontSizeLarge}" />
+                                        <TextBlock Text="{Binding Name}" Margin="10,-2,10,0" 
+                                                   Style="{StaticResource PhoneTextSubtleStyle}" />
+                                        <TextBlock Text="{Binding Category}" Margin="10,-2,10,0" 
+                                                   Style="{StaticResource PhoneTextSubtleStyle}" />
                                     </StackPanel>
                                 </StackPanel>
                                 <Image Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="92,2,0,0" Source="Assets/music_explorer_note.png"/>
@@ -166,9 +176,13 @@
                             <StackPanel Orientation="Horizontal" Margin="12,2,0,4" Height="105" Width="432">
                                 <Image Width="100" Height="100" Source="{Binding ThumbUri}"/>
                                 <StackPanel Width="311" Margin="8,-7,0,0">
-                                    <TextBlock Text="{Binding Name}" Margin="10,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
-                                    <TextBlock Text="{Binding Country}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
-                                    <TextBlock Text="{Binding Genres}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                                    <TextBlock Text="{Binding Name}" Margin="10,0" 
+                                               Style="{StaticResource PhoneTextExtraLargeStyle}" 
+                                               FontSize="{StaticResource PhoneFontSizeLarge}" />
+                                    <TextBlock Text="{Binding Country}" Margin="10,-2,10,0" 
+                                               Style="{StaticResource PhoneTextSubtleStyle}" />
+                                    <TextBlock Text="{Binding Genres}" Margin="10,-2,10,0" 
+                                               Style="{StaticResource PhoneTextSubtleStyle}" />
                                 </StackPanel>
                             </StackPanel>
                         </DataTemplate>
@@ -197,7 +211,9 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" Margin="0,2,0,4" Height="75" Width="432">
                                 <StackPanel Width="411" Margin="7,0,0,0">
-                                    <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Margin="10,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
+                                    <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Margin="10,0" 
+                                               Style="{StaticResource PhoneTextExtraLargeStyle}" 
+                                               FontSize="{StaticResource PhoneFontSizeLarge}" />
                                 </StackPanel>
                             </StackPanel>
                         </DataTemplate>
@@ -226,7 +242,9 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" Margin="0,2,0,4" Height="75" Width="432">
                                 <StackPanel Width="411" Margin="7,0,0,0">
-                                    <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Margin="10,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
+                                    <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Margin="10,0" 
+                                               Style="{StaticResource PhoneTextExtraLargeStyle}" 
+                                               FontSize="{StaticResource PhoneFontSizeLarge}" />
                                 </StackPanel>
                             </StackPanel>
                         </DataTemplate>

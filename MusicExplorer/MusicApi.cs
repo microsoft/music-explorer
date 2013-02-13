@@ -34,8 +34,8 @@ namespace MusicExplorer
     public class MusicApi
     {
         // Constants
-        private const string MUSIC_EXPLORER_APP_ID = "v0Bh5kUAzCDp7PVS4kKr";
-        private const string MUSIC_EXPLORER_APP_TOKEN = "OfItN9r8E5QHfNO5mw-rEg";
+        public const string MUSIC_EXPLORER_APP_ID = "v0Bh5kUAzCDp7PVS4kKr";
+        public const string MUSIC_EXPLORER_APP_TOKEN = "OfItN9r8E5QHfNO5mw-rEg";
 
         // Members
         private MusicClient client = null;
@@ -63,13 +63,16 @@ namespace MusicExplorer
         public void Initialize(string countryCode)
         {
             // Create a music client with correct AppId and Token/AppCode
-            if (countryCode == null || countryCode.Length <= 0)
+            if (countryCode == null || countryCode.Length != 2)
             {
-                client = new MusicClient(MUSIC_EXPLORER_APP_ID, MUSIC_EXPLORER_APP_TOKEN);
+                client = new MusicClient(MUSIC_EXPLORER_APP_ID, 
+                                         MUSIC_EXPLORER_APP_TOKEN);
             }
             else
             {
-                client = new MusicClient(MUSIC_EXPLORER_APP_ID, MUSIC_EXPLORER_APP_TOKEN, countryCode);
+                client = new MusicClient(MUSIC_EXPLORER_APP_ID, 
+                                         MUSIC_EXPLORER_APP_TOKEN, 
+                                         countryCode.ToLower());
             }
             initialized = true;
         }
@@ -341,7 +344,7 @@ namespace MusicExplorer
 
                             if (p.Category == Category.Single)
                             {
-                                categoryString = "Track";
+                                categoryString = "Single";
                             }
                             else if (p.Category == Category.Track)
                             {

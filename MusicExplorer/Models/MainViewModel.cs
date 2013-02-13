@@ -344,20 +344,20 @@ namespace MusicExplorer.Models
 
             foreach (Artist a in mediaLib.Artists)
             {
-                if (a.Songs.Count == 0) continue; // Unknown artist with 0 tracks encountered
+                if (a.Songs.Count <= 0) continue; // Skip artists without tracks
                 string artist = a.Name;
                 int trackCount = a.Songs.Count;
                 int playCount = 0;
 
-                // check the play count of artist's tracks
+                // Check the play count of artist's tracks
                 foreach (Song s in a.Songs)
                 {
                     playCount += s.PlayCount;
                 }
 
-                // search correct index for artist based on artist's play count
+                // Insert artist before less played artists..
                 bool artistAdded = false;
-                for (int i = 1; i < LocalAudio.Count; i++)
+                for (int i = 1; i < LocalAudio.Count; i++) // Index 0 reserved for title item
                 {
                     if (Convert.ToInt16(LocalAudio[i].PlayCount) < playCount)
                     {
@@ -371,6 +371,8 @@ namespace MusicExplorer.Models
                         break;
                     }
                 }
+
+                // ...Or add artist to the end of the list if it's least played
                 if (artistAdded == false)
                 {
                     this.LocalAudio.Add(new ArtistModel() 
@@ -393,20 +395,11 @@ namespace MusicExplorer.Models
                 removeIndex--;
             }
 
+            // Divide local artists into two "size categories"
             foreach (ArtistModel m in App.ViewModel.LocalAudio)
             {
-                // Divide local artists into two "size categories"
                 if (m.Name == "MusicExplorerTitlePlaceholder") continue;
-                int artistsWithMoreTracks = 0;
-                int trackCount = Convert.ToInt16(m.LocalTrackCount);
-                for (int i = 0; i < App.ViewModel.LocalAudio.Count; i++)
-                {
-                    if (Convert.ToInt16(App.ViewModel.LocalAudio[i].LocalTrackCount) > trackCount)
-                        artistsWithMoreTracks++;
-                }
-                double artistRelation = (double)artistsWithMoreTracks / (double)totalArtistCount;
-
-                if (artistRelation < 0.5)
+                if (Convert.ToInt16(m.LocalTrackCount) > (totalTrackCount / totalArtistCount))
                 {
                     m.ItemHeight = "200";
                     m.ItemWidth = "206";
@@ -418,7 +411,7 @@ namespace MusicExplorer.Models
                 }
             }
 
-            if (LocalAudio.Count <= 0)
+            if (LocalAudio.Count <= 1) // There's always the favourites title
             {
                 NoFavouritesVisibility = Visibility.Visible;
             }
