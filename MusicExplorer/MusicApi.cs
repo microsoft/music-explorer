@@ -34,8 +34,8 @@ namespace MusicExplorer
     public class MusicApi
     {
         // Constants
-        public const string MUSIC_EXPLORER_APP_ID = "v0Bh5kUAzCDp7PVS4kKr";
-        public const string MUSIC_EXPLORER_APP_TOKEN = "OfItN9r8E5QHfNO5mw-rEg";
+        public const string MUSIC_EXPLORER_APP_ID = "music_explorer_private_app_id"; // real app id not shown here
+        public const string MUSIC_EXPLORER_APP_TOKEN = "music_explorer_private_app_token"; // real app token not shown here
 
         // Members
         private MusicClient client = null;
