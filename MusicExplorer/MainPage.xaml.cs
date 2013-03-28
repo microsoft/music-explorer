@@ -318,27 +318,31 @@ namespace MusicExplorer
                                                MusicApi.MUSIC_EXPLORER_APP_TOKEN);
             }
 
-            resolver.CheckAvailability((Response<bool> response) =>
+            if (twoLetterCountryCode != null)
             {
-                Deployment.Current.Dispatcher.BeginInvoke(() =>
+                resolver.CheckAvailability((Response<bool> response) =>
                 {
-                    if (response.Result)
+                    Deployment.Current.Dispatcher.BeginInvoke(() =>
                     {
-                        // Make initial requests to fill models
-                        App.MusicApi.Initialize(twoLetterCountryCode);
-                        App.MusicApi.GetArtistInfoForLocalAudio();
-                        App.MusicApi.GetNewReleases();
-                        App.MusicApi.GetTopArtists();
-                        App.MusicApi.GetGenres();
-                        App.MusicApi.GetMixGroups();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Sorry, Nokia Music is not available in this locale.");
-                    }
-                });
-            },
-            twoLetterCountryCode.ToLower());
+                        if (!response.Result)
+                        {
+                            MessageBox.Show("Sorry, Nokia Music is not available in this locale.");
+                            twoLetterCountryCode = null;
+                        }
+                    });
+                },
+                twoLetterCountryCode.ToLower());
+            }
+            
+            // If country code is null, phone region settings are used
+            App.MusicApi.Initialize(twoLetterCountryCode);
+
+            // Make initial requests to fill models
+            App.MusicApi.GetArtistInfoForLocalAudio();
+            App.MusicApi.GetNewReleases();
+            App.MusicApi.GetTopArtists();
+            App.MusicApi.GetGenres();
+            App.MusicApi.GetMixGroups();
         }
 
         /// <summary>

@@ -188,6 +188,7 @@ describes the properties and usage of Nokia Music API in detail.
 8. Version history
 -------------------------------------------------------------------------------
 
+1.0.1.0 Bug fix to handle exception when location is set off
 1.0.0.0 First release
 0.4.0.0 Minor fixes
 0.3.0.0 Public beta
