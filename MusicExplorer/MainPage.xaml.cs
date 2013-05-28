@@ -9,7 +9,7 @@
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Maps.Services;
 using Microsoft.Phone.Shell;
-using Nokia.Music.Phone;
+using Nokia.Music;
 using System;
 using System.Collections.Generic;
 using System.Device.Location;
@@ -314,8 +314,7 @@ namespace MusicExplorer
         {
             if (resolver == null)
             {
-                resolver = new CountryResolver(MusicApi.MUSIC_EXPLORER_APP_ID,
-                                               MusicApi.MUSIC_EXPLORER_APP_TOKEN);
+                resolver = new CountryResolver(MusicApi.MUSIC_EXPLORER_APP_ID);
             }
 
             if (twoLetterCountryCode != null)

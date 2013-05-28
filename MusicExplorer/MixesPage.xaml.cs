@@ -16,7 +16,7 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 
-using Nokia.Music.Phone;
+using Nokia.Music;
 using MusicExplorer.Models;
 
 namespace MusicExplorer

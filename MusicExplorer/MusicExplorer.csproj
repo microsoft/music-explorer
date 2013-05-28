@@ -25,6 +25,8 @@
     <ValidateXaml>true</ValidateXaml>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -195,14 +197,18 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Phone.Controls, Version=8.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.Phone.Controls.Toolkit">
+    <Reference Include="Microsoft.Phone.Controls.Toolkit, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b772ad94eb9ca604, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\WPtoolkit.4.2012.10.30\lib\wp8\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\sl3-wp\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\sl4-windowsphone71\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Nokia.Music.Wp8">
-      <HintPath>..\packages\NokiaMusic.1.0.3\lib\windowsphone8\Nokia.Music.Wp8.dll</HintPath>
+      <HintPath>..\packages\NokiaMusic.2.2.0\lib\windowsphone8\Nokia.Music.Wp8.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpGIS.GZipWebClient">
+      <HintPath>..\packages\SharpGIS.GZipWebClient.1.4.0.0\lib\wp71\SharpGIS.GZipWebClient.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
@@ -215,4 +221,5 @@
   </Target>
   -->
   <ProjectExtensions />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>

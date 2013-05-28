@@ -8,21 +8,24 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Nokia.Music.Phone;
-using Nokia.Music.Phone.Tasks;
-using Nokia.Music.Phone.Types;
+using System.Windows;
 using System.Windows.Threading;
 
-using MusicExplorer.Models;
-using System.Windows;
-using System.Globalization;
-using System.Collections.ObjectModel;
 using Microsoft.Phone.Tasks;
 using Microsoft.Phone.Shell;
-using System.ComponentModel;
+
+using Nokia.Music;
+using Nokia.Music.Tasks;
+using Nokia.Music.Types;
+
+using MusicExplorer.Models;
+
 
 namespace MusicExplorer
 {
@@ -65,13 +68,11 @@ namespace MusicExplorer
             // Create a music client with correct AppId and Token/AppCode
             if (countryCode == null || countryCode.Length != 2)
             {
-                client = new MusicClient(MUSIC_EXPLORER_APP_ID, 
-                                         MUSIC_EXPLORER_APP_TOKEN);
+                client = new MusicClient(MUSIC_EXPLORER_APP_ID);
             }
             else
             {
                 client = new MusicClient(MUSIC_EXPLORER_APP_ID, 
-                                         MUSIC_EXPLORER_APP_TOKEN, 
                                          countryCode.ToLower());
             }
             initialized = true;
