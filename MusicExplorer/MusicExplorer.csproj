@@ -122,6 +122,7 @@
     <Compile Include="TileItem.xaml.cs">
       <DependentUpon>TileItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TiltGrid.cs" />
     <Compile Include="TopArtistsForGenrePage.xaml.cs">
       <DependentUpon>TopArtistsForGenrePage.xaml</DependentUpon>
     </Compile>
