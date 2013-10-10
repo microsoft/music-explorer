@@ -45,7 +45,7 @@ namespace MusicExplorer
             ApplyTemplate();
 
             // Special case - "Favourites" Title is in fact a FlipableItem
-            if (FrontPrimaryText == "MusicExplorerTitlePlaceholder")
+            if (FrontPrimaryText == "TitlePlaceholder")
             {
                 FrontSide.Visibility = Visibility.Collapsed;
                 BackSide.Visibility = Visibility.Collapsed;

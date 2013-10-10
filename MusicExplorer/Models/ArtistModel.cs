@@ -83,6 +83,50 @@ namespace MusicExplorer.Models
             }
         }
 
+        private Uri _thumb100Uri;
+        /// <summary>
+        /// Artist's Thumb100Uri (100 px) property.
+        /// This property is used in the UI to display the image in Uri using a Binding.
+        /// </summary>
+        public Uri Thumb100Uri
+        {
+            get
+            {
+                return _thumb100Uri;
+            }
+            set
+            {
+                if (value != _thumb100Uri)
+                {
+                    _thumb100Uri = value;
+                    NotifyPropertyChanged("Thumb100Uri");
+                    NotifyPropertyChanged("ThumbUri");
+                }
+            }
+        }
+
+        private Uri _thumb200Uri;
+        /// <summary>
+        /// Artist's Thumb200Uri (200 px) property.
+        /// This property is used in the UI to display the image in Uri using a Binding.
+        /// </summary>
+        public Uri Thumb200Uri
+        {
+            get
+            {
+                return _thumb200Uri;
+            }
+            set
+            {
+                if (value != _thumb200Uri)
+                {
+                    _thumb200Uri = value;
+                    NotifyPropertyChanged("Thumb200Uri");
+                    NotifyPropertyChanged("ThumbUri");
+                }
+            }
+        }
+
         private Uri _thumbUri;
         /// <summary>
         /// Artist's ThumbUri property.
@@ -92,14 +136,13 @@ namespace MusicExplorer.Models
         {
             get
             {
-                return _thumbUri;
-            }
-            set
-            {
-                if (value != _thumbUri)
+                if (_thumb200Uri != null)
                 {
-                    _thumbUri = value;
-                    NotifyPropertyChanged("ThumbUri");
+                    return _thumb200Uri;
+                }
+                else
+                {
+                    return _thumb100Uri;
                 }
             }
         }

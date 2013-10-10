@@ -83,6 +83,50 @@ namespace MusicExplorer.Models
             }
         }
 
+        private Uri _thumb100Uri;
+        /// <summary>
+        /// ProductModel's Thumb100Uri (100 px) property.
+        /// This property is used in the UI to display the image in Uri using a Binding.
+        /// </summary>
+        public Uri Thumb100Uri
+        {
+            get
+            {
+                return _thumb100Uri;
+            }
+            set
+            {
+                if (value != _thumb100Uri)
+                {
+                    _thumb100Uri = value;
+                    NotifyPropertyChanged("Thumb100Uri");
+                    NotifyPropertyChanged("ThumbUri");
+                }
+            }
+        }
+
+        private Uri _thumb200Uri;
+        /// <summary>
+        /// ProductModel's Thumb200Uri (200 px) property.
+        /// This property is used in the UI to display the image in Uri using a Binding.
+        /// </summary>
+        public Uri Thumb200Uri
+        {
+            get
+            {
+                return _thumb200Uri;
+            }
+            set
+            {
+                if (value != _thumb200Uri)
+                {
+                    _thumb100Uri = value;
+                    NotifyPropertyChanged("Thumb200Uri");
+                    NotifyPropertyChanged("ThumbUri");
+                }
+            }
+        }
+
         private Uri _thumbUri;
         /// <summary>
         /// ProductModel's ThumbUri property.
@@ -92,14 +136,13 @@ namespace MusicExplorer.Models
         {
             get
             {
-                return _thumbUri;
-            }
-            set
-            {
-                if (value != _thumbUri)
+                if (_thumb200Uri != null)
                 {
-                    _thumbUri = value;
-                    NotifyPropertyChanged("ThumbUri");
+                    return _thumb200Uri;
+                }
+                else
+                {
+                    return _thumb100Uri;
                 }
             }
         }
@@ -121,6 +164,48 @@ namespace MusicExplorer.Models
                 {
                     _id = value;
                     NotifyPropertyChanged("Id");
+                }
+            }
+        }
+
+        private string _itemWidth;
+        /// <summary>
+        /// Product's itemWidth property.
+        /// This property is used when determining width of the product list item.
+        /// </summary>
+        public string ItemWidth
+        {
+            get
+            {
+                return _itemWidth;
+            }
+            set
+            {
+                if (value != _itemWidth)
+                {
+                    _itemWidth = value;
+                    NotifyPropertyChanged("ItemWidth");
+                }
+            }
+        }
+
+        private string _itemHeight;
+        /// <summary>
+        /// Product's ItemWidth property.
+        /// This property is used when determining height of the product list item.
+        /// </summary>
+        public string ItemHeight
+        {
+            get
+            {
+                return _itemHeight;
+            }
+            set
+            {
+                if (value != _itemHeight)
+                {
+                    _itemHeight = value;
+                    NotifyPropertyChanged("ItemHeight");
                 }
             }
         }

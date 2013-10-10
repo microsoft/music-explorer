@@ -64,9 +64,33 @@ namespace MusicExplorer.Models
 
             // Insert a place holder for title text
             LocalAudio.Add(new ArtistModel() { 
-                Name = "MusicExplorerTitlePlaceholder", 
+                Name = "TitlePlaceholder", 
                 ItemHeight = "110", 
-                ItemWidth = "400" 
+                ItemWidth = "450" 
+            });
+
+            // Insert a place holder for title text
+            Recommendations.Add(new ArtistModel()
+            {
+                Name = "TitlePlaceholderrecommended",
+                ItemHeight = "110",
+                ItemWidth = "450"
+            });
+
+            // Insert a place holder for title text
+            NewReleases.Add(new ProductModel()
+            {
+                Performers = "TitlePlaceholderwhat's new",
+                ItemHeight = "110",
+                ItemWidth = "450"
+            });
+
+            // Insert a place holder for title text
+            TopArtists.Add(new ArtistModel()
+            {
+                Name = "TitlePlaceholderwho's hot",
+                ItemHeight = "110",
+                ItemWidth = "450"
             });
 
             // Enable flipping of favourites items after launch
@@ -398,7 +422,7 @@ namespace MusicExplorer.Models
             // Divide local artists into two "size categories"
             foreach (ArtistModel m in App.ViewModel.LocalAudio)
             {
-                if (m.Name == "MusicExplorerTitlePlaceholder") continue;
+                if (m.Name == "TitlePlaceholder") continue;
                 if (Convert.ToInt16(m.LocalTrackCount) > (totalTrackCount / totalArtistCount))
                 {
                     m.ItemHeight = "200";

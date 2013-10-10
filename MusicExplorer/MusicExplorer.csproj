@@ -119,6 +119,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AppResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="TileItem.xaml.cs">
+      <DependentUpon>TileItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TopArtistsForGenrePage.xaml.cs">
       <DependentUpon>TopArtistsForGenrePage.xaml</DependentUpon>
     </Compile>
@@ -150,6 +153,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MixesPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TileItem.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Include="TopArtistsForGenrePage.xaml">

@@ -1,0 +1,139 @@
+﻿/*
+ * Copyright © 2013 Nokia Corporation. All rights reserved.
+ * Nokia and Nokia Connecting People are registered trademarks of Nokia Corporation. 
+ * Other product and company names mentioned herein may be trademarks
+ * or trade names of their respective owners. 
+ * See LICENSE.TXT for license information.
+ */
+
+using Microsoft.Phone.Controls;
+using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Threading;
+
+namespace MusicExplorer
+{
+    /// <summary>
+    /// This class represents a tile item in artist/product views.
+    /// Shows an image with overlaid textual information.
+    /// </summary>
+    public partial class TileItem : UserControl
+    {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public TileItem()
+        {
+            InitializeComponent();
+        }
+
+        /// <summary>
+        /// Make additional formatting depending on data.
+        /// </summary>
+        void OnLoaded(Object sender, RoutedEventArgs e)
+        {
+            ApplyTemplate();
+
+            // Special case - Title Tile
+            String titlePlaceholder = "TitlePlaceholder";
+            if (PrimaryText.StartsWith(titlePlaceholder))
+            {
+                TitleText.Text = PrimaryText.Substring(titlePlaceholder.Length);
+                TileLayout.Visibility = Visibility.Collapsed;
+                TitleLayout.Visibility = Visibility.Visible;
+                return;
+            }
+            else
+            {
+                TileLayout.Visibility = Visibility.Visible;
+            }
+        }
+
+        /// <summary>
+        /// ItemWidth property to enable binding.
+        /// </summary>
+        public static readonly DependencyProperty ItemWidthProperty =
+            DependencyProperty.Register("ItemWidth", typeof(string), typeof(TileItem), null);
+        public string ItemWidth
+        {
+            get
+            {
+                return (string)GetValue(ItemWidthProperty);
+            }
+            set
+            {
+                SetValue(ItemWidthProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// ItemHeight property to enable binding.
+        /// </summary>
+        public static readonly DependencyProperty ItemHeightProperty =
+            DependencyProperty.Register("ItemHeight", typeof(string), typeof(TileItem), null);
+        public string ItemHeight
+        {
+            get
+            {
+                return (string)GetValue(ItemHeightProperty);
+            }
+            set
+            {
+                SetValue(ItemHeightProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// PrimaryText property to enable binding.
+        /// </summary>
+        public static readonly DependencyProperty PrimaryTextProperty =
+            DependencyProperty.Register("PrimaryText", typeof(string), typeof(TileItem), null);
+        public string PrimaryText
+        {
+            get
+            {
+                return (string)GetValue(PrimaryTextProperty);
+            }
+            set
+            {
+                SetValue(PrimaryTextProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// SecondaryText property to enable binding.
+        /// </summary>
+        public static readonly DependencyProperty SecondaryTextProperty =
+            DependencyProperty.Register("SecondaryText", typeof(string), typeof(TileItem), null);
+        public string SecondaryText
+        {
+            get
+            {
+                return (string)GetValue(SecondaryTextProperty);
+            }
+            set
+            {
+                SetValue(SecondaryTextProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Image property to enable binding. Artist/Product image.
+        /// </summary>
+        public static readonly DependencyProperty ImageProperty =
+            DependencyProperty.Register("Image", typeof(string), typeof(TileItem), null);
+        public string Image
+        {
+            get
+            {
+                return (string)GetValue(ImageProperty);
+            }
+            set
+            {
+                SetValue(ImageProperty, value);
+            }
+        }
+    }
+}

@@ -45,6 +45,8 @@ namespace MusicExplorer
             InitializeComponent();
             DataContext = App.ViewModel;
             SystemTray.SetOpacity(this, 0.01);
+            LocalAudioList.LayoutUpdated += OnFavoriteLayoutUpdated;
+            RecommendationsList.LayoutUpdated += OnRecommendationsLayoutUpdated;
         }
 
         /// <summary>
@@ -134,7 +136,7 @@ namespace MusicExplorer
         void OnRecommendationSelectionChanged(Object sender, SelectionChangedEventArgs e)
         {
             ArtistModel selected = (ArtistModel)RecommendationsList.SelectedItem;
-            if (selected != null)
+            if (selected != null && RecommendationsList.SelectedIndex > 0) // title is in index 0
             {
                 if (selected != App.ViewModel.SelectedArtist)
                 {
@@ -159,7 +161,7 @@ namespace MusicExplorer
         void OnNewReleasesSelectionChanged(Object sender, SelectionChangedEventArgs e)
         {
             ProductModel selected = (ProductModel)NewReleasesList.SelectedItem;
-            if (selected != null)
+            if (selected != null && NewReleasesList.SelectedIndex > 0) // title is in index 0
             {
                 App.MusicApi.LaunchProduct(selected.Id);
                 NewReleasesList.SelectedItem = null;
@@ -174,7 +176,7 @@ namespace MusicExplorer
         void OnTopArtistsSelectionChanged(Object sender, SelectionChangedEventArgs e)
         {
             ArtistModel selected = (ArtistModel)TopArtistsList.SelectedItem;
-            if (selected != null)
+            if (selected != null && TopArtistsList.SelectedIndex > 0) // title is in index 0
             {
                 if (selected != App.ViewModel.SelectedArtist)
                 {
@@ -352,6 +354,24 @@ namespace MusicExplorer
         {
             Panorama p = (Panorama)sender;
             App.ViewModel.FlipFavourites = p.SelectedIndex == 0 ? true : false;
+        }
+
+        private void OnFavoriteLayoutUpdated(object sender, EventArgs e)
+        {
+            if (LocalAudioList.Items.Count > 1)
+            {
+                LocalAudioList.IsHitTestVisible = true;
+                LocalAudioList.LayoutUpdated -= OnFavoriteLayoutUpdated;
+            }
+        }
+
+        private void OnRecommendationsLayoutUpdated(object sender, EventArgs e)
+        {
+            if (RecommendationsList.Items.Count > 1)
+            {
+                RecommendationsList.IsHitTestVisible = true;
+                RecommendationsList.LayoutUpdated -= OnRecommendationsLayoutUpdated;
+            }
         }
     }
 }
