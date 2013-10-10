@@ -99,7 +99,7 @@ namespace MusicExplorer
         void OnFavoriteSelectionChanged(Object sender, SelectionChangedEventArgs e)
         {
             ArtistModel selected = (ArtistModel)LocalAudioList.SelectedItem;
-            if (selected != null)
+            if (selected != null && LocalAudioList.SelectedIndex > 0) // title is in index 0
             {
                 // Artist info cannot be fetched from Nokia Music API until the Id
                 // of the artist is known (received from API with artist search).

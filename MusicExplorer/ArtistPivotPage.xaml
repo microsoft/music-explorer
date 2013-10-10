@@ -59,7 +59,7 @@
         <phone:Pivot x:Name="TitleText" Title="MUSIC EXPLORER">
             
             <!--Details Item-->
-            <phone:PivotItem Header="details">
+            <phone:PivotItem x:Name="DetailsPivotItem" Header="details">
                 <Grid>
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="0,2,0,4" Height="105" Width="432">
@@ -104,7 +104,7 @@
             </phone:PivotItem>
 
             <!--Tracks Item-->
-            <phone:PivotItem Header="tracks">
+            <phone:PivotItem x:Name="TracksPivotItem" Header="tracks">
                 <Grid>
                     <TextBlock Margin="0,50,0,0" FontSize="24" Text="No tracks available" HorizontalAlignment="Center" Visibility="{Binding NoTracksVisibility}"></TextBlock>
                     <phone:LongListSelector x:Name="TracksList" Margin="0,-7,0,2" ItemsSource="{Binding TracksForArtist}" SelectionChanged="OnTrackSelectionChanged">
@@ -128,7 +128,7 @@
             </phone:PivotItem>
 
             <!--Albums Item-->
-            <phone:PivotItem Header="albums">
+            <phone:PivotItem x:Name="AlbumsPivotItem" Header="albums">
                 <Grid>
                     <TextBlock Margin="0,50,0,0" FontSize="24" Text="No albums available" HorizontalAlignment="Center" Visibility="{Binding NoAlbumsVisibility}"></TextBlock>
                     <phone:LongListSelector x:Name="AlbumsList" Margin="0,-7,0,2" ItemsSource="{Binding AlbumsForArtist}" SelectionChanged="OnAlbumSelectionChanged">
@@ -152,7 +152,7 @@
             </phone:PivotItem>
 
             <!--Singles Item-->
-            <phone:PivotItem Header="singles">
+            <phone:PivotItem x:Name="SinglesPivotItem" Header="singles">
                 <Grid>
                     <TextBlock Margin="0,50,0,0" FontSize="24" Text="No singles available" HorizontalAlignment="Center" Visibility="{Binding NoSinglesVisibility}"></TextBlock>
                     <phone:LongListSelector x:Name="SinglesList" Margin="0,-7,0,2" ItemsSource="{Binding SinglesForArtist}" SelectionChanged="OnSingleSelectionChanged" toolkit:TiltEffect.IsTiltEnabled="True">
@@ -176,7 +176,7 @@
             </phone:PivotItem>
 
             <!--Similar Item-->
-            <phone:PivotItem Header="similar">
+            <phone:PivotItem x:Name="SimilarPivotItem" Header="similar">
                 <Grid>
                     <TextBlock Margin="0,50,0,0" FontSize="24" Text="No similar artists available" HorizontalAlignment="Center" Visibility="{Binding NoSimilarVisibility}"></TextBlock>
                     <phone:LongListSelector x:Name="SimilarList" Margin="0,-7,0,2" ItemsSource="{Binding SimilarForArtist}" SelectionChanged="OnSimilarArtistsSelectionChanged">

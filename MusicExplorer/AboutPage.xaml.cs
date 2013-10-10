@@ -31,6 +31,7 @@ namespace MusicExplorer
         {
             InitializeComponent();
             UpdateVersionString();
+            SystemTray.SetOpacity(this, 0.01);
         }
 
         /// <summary>

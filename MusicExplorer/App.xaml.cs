@@ -18,6 +18,7 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using MusicExplorer.Resources;
 using MusicExplorer.Models;
+using System.Windows.Media;
 
 namespace MusicExplorer
 {
@@ -81,6 +82,9 @@ namespace MusicExplorer
 
             // Language display initialization
             InitializeLanguage();
+
+            // Initialize theming
+            InitializeTheming();
 
             // Show graphics profiling information while debugging.
             if (Debugger.IsAttached)
@@ -283,6 +287,37 @@ namespace MusicExplorer
 
                 throw;
             }
+        }
+
+        private void InitializeTheming()
+        {
+            ((SolidColorBrush)Resources["PhoneForegroundBrush"]).Color = (Color)Resources["MusicExplorerForegroundColor"];
+            ((SolidColorBrush)Resources["PhoneBackgroundBrush"]).Color = (Color)Resources["MusicExplorerBackgroundColor"];
+            ((SolidColorBrush)Resources["PhoneContrastForegroundBrush"]).Color = (Color)Resources["MusicExplorerContrastForegroundColor"];
+            ((SolidColorBrush)Resources["PhoneContrastBackgroundBrush"]).Color = (Color)Resources["MusicExplorerContrastBackgroundColor"];
+            ((SolidColorBrush)Resources["PhoneTextCaretBrush"]).Color = (Color)Resources["MusicExplorerTextCaretColor"];
+            ((SolidColorBrush)Resources["PhoneTextBoxBrush"]).Color = (Color)Resources["MusicExplorerTextBoxColor"];
+            ((SolidColorBrush)Resources["PhoneTextBoxForegroundBrush"]).Color = (Color)Resources["MusicExplorerTextBoxForegroundColor"];
+            ((SolidColorBrush)Resources["PhoneTextBoxEditBackgroundBrush"]).Color = (Color)Resources["MusicExplorerTextBoxEditBackgroundColor"];
+            ((SolidColorBrush)Resources["PhoneTextBoxEditBorderBrush"]).Color = (Color)Resources["MusicExplorerAccentColor"];
+            ((SolidColorBrush)Resources["PhoneTextBoxReadOnlyBrush"]).Color = (Color)Resources["MusicExplorerTextBoxReadOnlyColor"];
+            ((SolidColorBrush)Resources["PhoneTextBoxSelectionForegroundBrush"]).Color = (Color)Resources["MusicExplorerTextBoxSelectionForegroundColor"];
+            ((SolidColorBrush)Resources["PhoneSubtleBrush"]).Color = (Color)Resources["MusicExplorerSubtleColor"];
+            ((SolidColorBrush)Resources["PhoneButtonBasePressedForegroundBrush"]).Color = (Color)Resources["MusicExplorerButtonBasePressedForegroundColor"];
+            ((SolidColorBrush)Resources["PhoneRadioCheckBoxBrush"]).Color = (Color)Resources["MusicExplorerTransparent"];
+            ((SolidColorBrush)Resources["PhoneRadioCheckBoxBorderBrush"]).Color = (Color)Resources["MusicExplorerForegroundColor"];
+            ((SolidColorBrush)Resources["PhoneRadioCheckBoxCheckBrush"]).Color = (Color)Resources["MusicExplorerForegroundColor"];
+            ((SolidColorBrush)Resources["PhoneRadioCheckBoxPressedBrush"]).Color = (Color)Resources["MusicExplorerAccentColor"];
+            ((SolidColorBrush)Resources["PhoneDisabledBrush"]).Color = (Color)Resources["MusicExplorerDisabledColor"];
+            ((SolidColorBrush)Resources["PhoneSemitransparentBrush"]).Color = (Color)Resources["MusicExplorerSemitransparentColor"];
+            ((SolidColorBrush)Resources["PhoneChromeBrush"]).Color = (Color)Resources["MusicExplorerChromeColor"];
+            ((SolidColorBrush)Resources["PhoneAccentBrush"]).Color = (Color)Resources["MusicExplorerAccentColor"];
+            ((SolidColorBrush)Resources["PhoneProgressBarBackgroundBrush"]).Color = (Color)Resources["MusicExplorerProgressBarBackgroundColor"];
+            ((SolidColorBrush)Resources["PhoneTextHighContrastBrush"]).Color = (Color)Resources["MusicExplorerTextHighContrastColor"];
+            ((SolidColorBrush)Resources["PhoneTextMidContrastBrush"]).Color = (Color)Resources["MusicExplorerTextMidContrastColor"];
+            ((SolidColorBrush)Resources["PhoneTextLowContrastBrush"]).Color = (Color)Resources["MusicExplorerTextLowContrastColor"];
+
+            RootFrame.Background = new SolidColorBrush((Color)Resources["MusicExplorerBackgroundColor"]);
         }
     }
 }

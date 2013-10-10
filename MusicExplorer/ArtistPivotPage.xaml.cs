@@ -18,6 +18,7 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 
 using MusicExplorer.Models;
+using System.Windows.Media;
 
 namespace MusicExplorer
 {
@@ -164,6 +165,11 @@ namespace MusicExplorer
         {
             ShuffleAndPlayLocalArtist(App.ViewModel.SelectedArtist.Name);
             ApplicationBar.IsVisible = true;
+            DetailsPivotItem.Margin = new Thickness(12, 28, 12, 70);
+            TracksPivotItem.Margin = new Thickness(12, 28, 12, 70);
+            AlbumsPivotItem.Margin = new Thickness(12, 28, 12, 70);
+            SinglesPivotItem.Margin = new Thickness(12, 28, 12, 70);
+            SimilarPivotItem.Margin = new Thickness(12, 28, 12, 70);
             NowPlayingText.Visibility = Visibility.Visible;
         }
 
@@ -267,9 +273,11 @@ namespace MusicExplorer
             ApplicationBar = new ApplicationBar();
 
             ApplicationBar.Mode = ApplicationBarMode.Default;
-            ApplicationBar.Opacity = 1.0;
+            ApplicationBar.Opacity = 0.99;
             ApplicationBar.IsVisible = false;
             ApplicationBar.IsMenuEnabled = false;
+            ApplicationBar.BackgroundColor = Color.FromArgb(255, 20, 20, 20);
+            ApplicationBar.ForegroundColor = Color.FromArgb(255, 255, 255, 255);
 
             prevButton = new ApplicationBarIconButton();
             prevButton.IconUri = new Uri("/Assets/transport.rew.png", UriKind.Relative);

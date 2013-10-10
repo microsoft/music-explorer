@@ -257,7 +257,9 @@
     </Grid>
 
     <phone:PhoneApplicationPage.ApplicationBar>
-        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True" Mode="Minimized" Opacity="1.0" >
+        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True" Mode="Minimized" Opacity="0.99"
+                              ForegroundColor="{StaticResource MusicExplorerApplicationBarForegroundColor}"
+                              BackgroundColor="{StaticResource MusicExplorerApplicationBarBackgroundColor}">
             <shell:ApplicationBarIconButton IconUri="/Assets/questionmark.png" Text="about" Click="About_Click" />
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>

@@ -17,6 +17,42 @@
 
     <!--Application Resources-->
     <Application.Resources>
+
+        <!-- Common colors -->
+        <Color x:Key="MusicExplorerForegroundColor">#FFFFFFFF</Color>
+        <Color x:Key="MusicExplorerBackgroundColor">#FF000000</Color>
+        <Color x:Key="MusicExplorerContrastForegroundColor">#FF000000</Color>
+        <Color x:Key="MusicExplorerContrastBackgroundColor">#FFFFFFFF</Color>
+        <Color x:Key="MusicExplorerDisabledColor">#66FFFFFF</Color>
+        <Color x:Key="MusicExplorerProgressBarBackgroundColor">#19FFFFFF</Color>
+
+        <!-- TextBox colors -->
+        <Color x:Key="MusicExplorerTextCaretColor">#FF000000</Color>
+        <Color x:Key="MusicExplorerTextBoxColor">#BFFFFFFF</Color>
+        <Color x:Key="MusicExplorerTextBoxForegroundColor">#FF000000</Color>
+        <Color x:Key="MusicExplorerTextBoxEditBackgroundColor">#FFFFFFFF</Color>
+        <Color x:Key="MusicExplorerTextBoxReadOnlyColor">#77000000</Color>
+        <Color x:Key="MusicExplorerSubtleColor">#99FFFFFF</Color>
+        <Color x:Key="MusicExplorerTextBoxSelectionForegroundColor">#FFFFFFFF</Color>
+
+        <!-- ButtonBase colors -->
+        <Color x:Key="MusicExplorerButtonBasePressedForegroundColor">#FFFFFFFF</Color>
+
+        <!--Windows Phone 8 Text Colors-->
+        <Color x:Key="MusicExplorerTextHighContrastColor">#FFFFFFFF</Color>
+        <Color x:Key="MusicExplorerTextMidContrastColor">#99FFFFFF</Color>
+        <Color x:Key="MusicExplorerTextLowContrastColor">#73FFFFFF</Color>
+
+        <!-- Special colors -->
+        <Color x:Key="MusicExplorerAccentColor">#FFA0C0E4</Color>
+        <Color x:Key="MusicExplorerTransparent">Transparent</Color>
+        <Color x:Key="MusicExplorerSemitransparentColor">#AA000000</Color>
+        <Color x:Key="MusicExplorerChromeColor">#FF1F1F1F</Color>
+
+        <!-- Shell colors, need to be set in code -->
+        <Color x:Key="MusicExplorerApplicationBarForegroundColor">#FFFFFFFF</Color>
+        <Color x:Key="MusicExplorerApplicationBarBackgroundColor">#FF202020</Color>
+        
         <sys:Double x:Key="PanoramaItemHeaderFontSize">66</sys:Double>
 
         <Style x:Key="PanoramaItemHeaderTextStyle" TargetType="TextBlock">
