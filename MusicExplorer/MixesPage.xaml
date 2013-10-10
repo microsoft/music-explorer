@@ -60,21 +60,21 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Text="MUSIC EXPLORER" Style="{StaticResource PhoneTextNormalStyle}"/>
+            <TextBlock Text="{Binding SelectedMixGroup}" Style="{StaticResource PhoneTextNormalStyle}"/>
             <TextBlock Text="radio mixes" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="24,0,12,0">
-            <phone:LongListSelector x:Name="MixesList" Margin="0,0,0,0" ItemsSource="{Binding Mixes}" SelectionChanged="OnMixSelected">
+            <phone:LongListSelector x:Name="MixesList" Margin="0,0,0,0" ItemsSource="{Binding Mixes}" SelectionChanged="OnMixSelected" toolkit:TiltEffect.IsTiltEnabled="True">
                 <phone:LongListSelector.ItemTemplate>
                     <DataTemplate>
                         <Grid>
                             <StackPanel Orientation="Horizontal" Margin="0,2,0,4" HorizontalAlignment="Left" Height="105" Width="432">
                                 <Image Width="100" Height="100" Source="{Binding ThumbUri}"/>
-                                <StackPanel Width="311" Margin="8,-7,0,0">
-                                    <TextBlock Text="{Binding Name}" Margin="10,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
-                                    <TextBlock Text="{Binding ParentalAdvisory}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                                <StackPanel Width="311" Margin="8,4,0,0">
+                                    <TextBlock Text="{Binding Name}" Margin="10,-2,0,0" Style="{StaticResource PhoneTextNormalStyle}" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding ParentalAdvisory}" Margin="10,-2,0,0" Style="{StaticResource PhoneTextNormalStyle}" />
                                 </StackPanel>
                             </StackPanel>
                             <Image Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="80,2,0,0" Source="Assets/music_explorer_note.png"/>

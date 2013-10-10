@@ -207,7 +207,7 @@ namespace MusicExplorer
                 {
                     App.ViewModel.TopArtistsForGenre.Clear();
                     App.MusicApi.GetTopArtistsForGenre(selected.Id);
-                    App.ViewModel.SelectedGenre = selected.Name.ToLower();
+                    App.ViewModel.SelectedGenre = selected.Name.ToUpper();
                 }
                 NavigationService.Navigate(new Uri("/TopArtistsForGenrePage.xaml", UriKind.Relative));
                 GenresList.SelectedItem = null;
@@ -228,7 +228,7 @@ namespace MusicExplorer
                 {
                     App.ViewModel.Mixes.Clear();
                     App.MusicApi.GetMixes(selected.Id);
-                    App.ViewModel.SelectedMixGroup = selected.Id;
+                    App.ViewModel.SelectedMixGroup = selected.Name.ToUpper();
                 }
                 NavigationService.Navigate(new Uri("/MixesPage.xaml", UriKind.Relative));
                 MixGroupsList.SelectedItem = null;

@@ -15,6 +15,7 @@
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="clr-namespace:MusicExplorer"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
@@ -60,26 +61,30 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Text="TOP ARTISTS IN" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock Text="{Binding SelectedGenre}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <TextBlock Text="{Binding SelectedGenre}" Style="{StaticResource PhoneTextNormalStyle}"/>
+            <TextBlock Text="top artists" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="24,0,12,0">
-            <phone:LongListSelector x:Name="TopArtistsForGenreList" Margin="0,0,0,2" ItemsSource="{Binding TopArtistsForGenre}"  SelectionChanged="OnArtistSelected" toolkit:TiltEffect.IsTiltEnabled="True">
-                <phone:LongListSelector.ItemTemplate>
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+            <ListBox Margin="0,-7, 0,2" x:Name="TopArtistsForGenreList" ItemsSource="{Binding TopArtistsForGenre}" SelectionChanged="OnArtistSelected">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <toolkit:WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+
+                <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,2,0,4" Height="105" Width="432">
-                            <Image Width="100" Height="100" Source="{Binding ThumbUri}"/>
-                            <StackPanel Width="311" Margin="8,-7,0,0">
-                                <TextBlock Text="{Binding Name}" Margin="10,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
-                                <TextBlock Text="{Binding Country}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
-                                <TextBlock Text="{Binding Genres}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
-                            </StackPanel>
-                        </StackPanel>
+                        <controls:TileItem Height="{Binding ItemHeight}"
+                                                   Width="{Binding ItemWidth}"
+                                                   ItemWidth="{Binding ItemWidth}"
+                                                   PrimaryText="{Binding Name}" 
+                                                   SecondaryText="{Binding Country}" 
+                                                   Image="{Binding ThumbUri}"/>
                     </DataTemplate>
-                </phone:LongListSelector.ItemTemplate>
-            </phone:LongListSelector>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </Grid>
     </Grid>
 

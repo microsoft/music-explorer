@@ -62,6 +62,48 @@ namespace MusicExplorer.Models
             }
         }
 
+        private string _takenFrom;
+        /// <summary>
+        /// ProductModel's TakenFrom property.
+        /// This property is used in the UI to display its value using a Binding.
+        /// </summary>
+        public string TakenFrom
+        {
+            get
+            {
+                return _takenFrom;
+            }
+            set
+            {
+                if (value != _takenFrom)
+                {
+                    _takenFrom = value;
+                    NotifyPropertyChanged("TakenFrom");
+                }
+            }
+        }
+
+        private string _trackCount;
+        /// <summary>
+        /// ProductModel's TrackCount property.
+        /// This property is used in the UI to display its value using a Binding.
+        /// </summary>
+        public string TrackCount
+        {
+            get
+            {
+                return _trackCount;
+            }
+            set
+            {
+                if (value != _trackCount)
+                {
+                    _trackCount = value;
+                    NotifyPropertyChanged("TrackCount");
+                }
+            }
+        }
+
         private string _category;
         /// <summary>
         /// ProductModel's Category property.

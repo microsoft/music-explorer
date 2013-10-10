@@ -433,7 +433,9 @@ namespace MusicExplorer
                                 Thumb100Uri = a.Thumb100Uri,
                                 Thumb200Uri = a.Thumb200Uri,
                                 Thumb320Uri = a.Thumb320Uri,
-                                Id = a.Id
+                                Id = a.Id,
+                                ItemWidth = "205",
+                                ItemHeight = "205"
                             });
                         }
                     }
@@ -596,6 +598,16 @@ namespace MusicExplorer
 
                             string categoryString = "Album";
 
+                            string trackCountString = null;
+                            if (p.TrackCount > 0)
+                            {
+                                trackCountString = p.TrackCount + " track";
+                            }
+                            if (p.TrackCount > 1)
+                            {
+                                trackCountString += "s";
+                            }
+
                             if (p.Category == Category.Track)
                             {
                                 categoryString = "Track";
@@ -603,6 +615,7 @@ namespace MusicExplorer
                                     {
                                         Performers = performersString,
                                         Name = p.Name,
+                                        TakenFrom = takenFromString,
                                         Category = categoryString,
                                         Thumb100Uri = p.Thumb100Uri,
                                         Thumb200Uri = p.Thumb200Uri,
@@ -617,6 +630,7 @@ namespace MusicExplorer
                                     {
                                         Performers = performersString,
                                         Name = p.Name,
+                                        TrackCount = trackCountString,
                                         Category = categoryString,
                                         Thumb100Uri = p.Thumb100Uri,
                                         Thumb200Uri = p.Thumb200Uri,
@@ -630,6 +644,7 @@ namespace MusicExplorer
                                     {
                                         Performers = performersString,
                                         Name = p.Name,
+                                        TrackCount = trackCountString,
                                         Category = categoryString,
                                         Thumb100Uri = p.Thumb100Uri,
                                         Thumb200Uri = p.Thumb200Uri,
@@ -696,7 +711,9 @@ namespace MusicExplorer
                                 Thumb100Uri = a.Thumb100Uri,
                                 Thumb200Uri = a.Thumb200Uri,
                                 Thumb320Uri = a.Thumb320Uri,
-                                Id = a.Id
+                                Id = a.Id,
+                                ItemWidth = "205",
+                                ItemHeight = "205"
                             });
                         }
                     }

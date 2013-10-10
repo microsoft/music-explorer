@@ -70,12 +70,12 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top" Margin="0,2,0,4" Height="205" Width="432">
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top" Margin="0,-7,0,4" Height="205" Width="432">
                         <Image Width="200" Height="200" Source="{Binding SelectedArtist.ThumbUri}"/>
-                        <StackPanel Width="211" Margin="8,-7,0,0">
-                            <TextBlock Text="{Binding SelectedArtist.Name}" TextWrapping="Wrap" Margin="10,0,0,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
-                            <TextBlock Text="{Binding SelectedArtist.Country}" Margin="10,-2,0,0" Style="{StaticResource PhoneTextSubtleStyle}" />
-                            <TextBlock Text="{Binding SelectedArtist.Genres}" Margin="10,-2,0,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                        <StackPanel Width="211" Margin="8,0,0,0">
+                            <TextBlock Text="{Binding SelectedArtist.Name}" TextWrapping="Wrap" Margin="10,0,0,0" Style="{StaticResource PhoneTextLargeStyle}"/>
+                            <TextBlock Text="{Binding SelectedArtist.Country}" Margin="10,-2,0,0" Style="{StaticResource PhoneTextNormalStyle}"/>
+                            <TextBlock Text="{Binding SelectedArtist.Genres}" Margin="10,-2,0,0" Style="{StaticResource PhoneTextNormalStyle}"/>
                         </StackPanel>
                     </StackPanel>
 
@@ -132,10 +132,9 @@
                                 <Grid>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="12,2,0,4" Height="105" Width="432">
                                         <Image Width="100" Height="100" Source="{Binding ThumbUri}"/>
-                                        <StackPanel Width="311" Margin="8,-7,0,0">
-                                            <TextBlock Text="{Binding Performers}" Margin="10,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
-                                            <TextBlock Text="{Binding Name}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
-                                            <TextBlock Text="{Binding Category}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                                        <StackPanel Width="311" Margin="8,4,0,0">
+                                            <TextBlock Text="{Binding Name}" Margin="10,-2,0,0" Style="{StaticResource PhoneTextNormalStyle}" FontWeight="Bold"/>
+                                            <TextBlock Text="{Binding TakenFrom}" Margin="10,-2,0,0" Style="{StaticResource PhoneTextNormalStyle}"/>
                                         </StackPanel>
                                     </StackPanel>
                                     <Image Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="92,2,0,0" Source="Assets/music_explorer_note.png"/>
@@ -156,10 +155,9 @@
                                 <Grid>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="12,2,0,4" Height="105" Width="432">
                                         <Image Width="100" Height="100" Source="{Binding ThumbUri}"/>
-                                        <StackPanel Width="311" Margin="8,-7,0,0">
-                                            <TextBlock Text="{Binding Performers}" Margin="10,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
-                                            <TextBlock Text="{Binding Name}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
-                                            <TextBlock Text="{Binding Category}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                                        <StackPanel Width="311" Margin="8,4,0,0">
+                                            <TextBlock Text="{Binding Name}" Margin="10,-2,0,0" Style="{StaticResource PhoneTextNormalStyle}" FontWeight="Bold"/>
+                                            <TextBlock Text="{Binding TrackCount}" Margin="10,-2,0,0" Style="{StaticResource PhoneTextNormalStyle}"/>
                                         </StackPanel>
                                     </StackPanel>
                                     <Image Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="92,2,0,0" Source="Assets/music_explorer_note.png"/>
@@ -180,10 +178,9 @@
                                 <Grid>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="12,2,0,4" Height="105" Width="432">
                                         <Image Width="100" Height="100" Source="{Binding ThumbUri}"/>
-                                        <StackPanel Width="311" Margin="8,-7,0,0">
-                                            <TextBlock Text="{Binding Performers}" Margin="10,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
-                                            <TextBlock Text="{Binding Name}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
-                                            <TextBlock Text="{Binding Category}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                                        <StackPanel Width="311" Margin="8,4,0,0">
+                                            <TextBlock Text="{Binding Name}" Margin="10,-2,0,0" Style="{StaticResource PhoneTextNormalStyle}" FontWeight="Bold"/>
+                                            <TextBlock Text="{Binding TrackCount}" Margin="10,-2,0,0" Style="{StaticResource PhoneTextNormalStyle}"/>
                                         </StackPanel>
                                     </StackPanel>
                                     <Image Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="92,2,0,0" Source="Assets/music_explorer_note.png"/>
@@ -197,24 +194,26 @@
             <!--Similar Item-->
             <phone:PivotItem x:Name="SimilarPivotItem" Header="similar">
                 <Grid>
-                    <TextBlock Margin="0,50,0,0" FontSize="24" Text="No similar artists available" HorizontalAlignment="Center" Visibility="{Binding NoSimilarVisibility}"></TextBlock>
-                    <phone:LongListSelector x:Name="SimilarList" Margin="0,-7,0,2" ItemsSource="{Binding SimilarForArtist}" SelectionChanged="OnSimilarArtistsSelectionChanged">
-                        <phone:LongListSelector.ItemTemplate>
+                    <TextBlock Margin="0,50,0,0" FontSize="24" Text="No similar artists available" HorizontalAlignment="Center" Visibility="{Binding NoSimilarVisibility}"/>
+                    <ListBox Margin="0,-7, 0,2" x:Name="SimilarList" ItemsSource="{Binding SimilarForArtist}" SelectionChanged="OnSimilarArtistsSelectionChanged">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <toolkit:WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+
+                        <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Grid>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="12,2,0,4" Height="105" Width="432">
-                                        <Image Width="100" Height="100" Source="{Binding ThumbUri}"/>
-                                        <StackPanel Width="311" Margin="8,-7,0,0">
-                                            <TextBlock Text="{Binding Name}" Margin="10,0" Style="{StaticResource PhoneTextExtraLargeStyle}" FontSize="{StaticResource PhoneFontSizeLarge}" />
-                                            <TextBlock Text="{Binding Country}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
-                                            <TextBlock Text="{Binding Genres}" Margin="10,-2,10,0" Style="{StaticResource PhoneTextSubtleStyle}" />
-                                        </StackPanel>
-                                    </StackPanel>
-                                    <Image Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="92,2,0,0" Source="Assets/music_explorer_note.png"/>
-                                </Grid>
+                                <controls:TileItem Height="{Binding ItemHeight}"
+                                                   Width="{Binding ItemWidth}"
+                                                   ItemWidth="{Binding ItemWidth}"
+                                                   PrimaryText="{Binding Name}" 
+                                                   SecondaryText="{Binding Country}" 
+                                                   Image="{Binding ThumbUri}"
+                                                   NoteImage="True"/>
                             </DataTemplate>
-                        </phone:LongListSelector.ItemTemplate>
-                    </phone:LongListSelector>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </Grid>
             </phone:PivotItem>
         </phone:Pivot>
