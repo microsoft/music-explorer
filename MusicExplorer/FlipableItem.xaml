@@ -89,7 +89,7 @@
                 <PlaneProjection RotationY="0" />
             </Grid.Projection>
 
-            <StackPanel Orientation="Horizontal" Margin="12,2,0,4" Background="#55000000">
+            <StackPanel Orientation="Horizontal" Margin="12,4,0,2" Background="#55000000">
                 <StackPanel Margin="4,4,4,4" Orientation="Vertical"  Width="{Binding ElementName=FlipControl, Path=ItemWidth}">
                     <TextBlock TextWrapping="Wrap" Text="{Binding ElementName=FlipControl, Path=FrontPrimaryText}" Margin="10,0" Style="{StaticResource PhoneTextLargeStyle}" FontSize="{StaticResource PhoneFontSizeMedium}" />
                     <StackPanel Margin="0,0,0,0" Orientation="Horizontal">
@@ -105,9 +105,9 @@
                 <PlaneProjection RotationY="270" />
             </Grid.Projection>
 
-            <Rectangle Margin="12,2,0,4" Fill="Black">
+            <Rectangle Margin="12,4,0,2" Fill="Black">
             </Rectangle>
-            <Image Margin="12,2,0,4" HorizontalAlignment="Center" Source="{Binding ElementName=FlipControl, Path=BackImage}"/>
+            <Image Margin="12,4,0,2" HorizontalAlignment="Center" Source="{Binding ElementName=FlipControl, Path=BackImage}"/>
         </Grid>
 
         <Grid x:Name="Title" Visibility="Collapsed">

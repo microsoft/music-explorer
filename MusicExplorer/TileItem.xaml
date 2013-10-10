@@ -28,9 +28,11 @@
                 <PlaneProjection RotationY="0" />
             </Grid.Projection>
 
-            <Image Margin="12,2,0,4" HorizontalAlignment="Center" Source="{Binding ElementName=TileControl, Path=Image}"/>
-            <StackPanel Orientation="Horizontal" Margin="12,2,0,4" VerticalAlignment="Bottom">
-                <StackPanel Background="#AA000000" Margin="0,4,0,3" Orientation="Vertical" Width="{Binding ElementName=TileControl, Path=ItemWidth}">
+            <Image Margin="12,0,0,4" HorizontalAlignment="Center" Source="{Binding ElementName=TileControl, Path=Image}"/>
+
+            <StackPanel Background="#AA000000" Orientation="Horizontal" Margin="12,0,0,8" VerticalAlignment="Bottom">
+                <Image x:Name="Note" Width="30" Height="30" VerticalAlignment="Center" Margin="0,0,0,0" Source="Assets/music_explorer_note.png" Visibility="Collapsed"/>
+                <StackPanel Margin="0,0,0,0" Orientation="Vertical" Width="{Binding ElementName=TileControl, Path=ItemWidth}">
                     <TextBlock Text="{Binding ElementName=TileControl, Path=PrimaryText}" Margin="4,0" Style="{StaticResource PhoneTextNormalStyle}"/>
                     <TextBlock Text="{Binding ElementName=TileControl, Path=SecondaryText}" Margin="4,0" Style="{StaticResource PhoneTextNormalStyle}" Loaded="OnLoaded"/>
                 </StackPanel>

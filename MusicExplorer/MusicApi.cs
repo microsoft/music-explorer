@@ -106,12 +106,9 @@ namespace MusicExplorer
                         m.Genres = response.Result[0].Genres[0].Name;
                         int itemHeight = Int32.Parse(m.ItemHeight);
 
-                        m.Thumb200Uri = response.Result[0].Thumb200Uri;
                         m.Thumb100Uri = response.Result[0].Thumb100Uri;
-                        if (m.Thumb100Uri == null && m.Thumb200Uri == null)
-                        {
-                            m.Thumb100Uri = new Uri("/Assets/thumb_100_placeholder.png", UriKind.Relative);
-                        }
+                        m.Thumb200Uri = response.Result[0].Thumb200Uri;
+                        m.Thumb320Uri = response.Result[0].Thumb320Uri;
 
                         localArtists.Add(response.Result[0]);
                     }
@@ -215,36 +212,19 @@ namespace MusicExplorer
                             // recommended, do it now.
                             if (!handled)
                             {
-                                if (a.Thumb100Uri != null || a.Thumb200Uri != null)
+                                App.ViewModel.Recommendations.Add(new ArtistModel()
                                 {
-                                    App.ViewModel.Recommendations.Add(new ArtistModel()
-                                    {
-                                        Name = a.Name,
-                                        Country = CountryCodes.CountryNameFromTwoLetter(a.Country),
-                                        Genres = a.Genres[0].Name,
-                                        Thumb100Uri = a.Thumb100Uri,
-                                        Thumb200Uri = a.Thumb200Uri,
-                                        Id = a.Id,
-                                        SimilarArtistCount = 1,
-                                        ItemWidth = "205",
-                                        ItemHeight = "205"
-                                    });
-                                }
-                                else
-                                {
-                                    App.ViewModel.Recommendations.Add(new ArtistModel() 
-                                        { 
-                                            Name = a.Name,
-                                            Country = CountryCodes.CountryNameFromTwoLetter(a.Country), 
-                                            Genres = a.Genres[0].Name, 
-                                            Thumb100Uri = new Uri("/Assets/thumb_100_placeholder.png", 
-                                                               UriKind.Relative), 
-                                            Id = a.Id, 
-                                            SimilarArtistCount = 1,
-                                            ItemWidth = "205",
-                                            ItemHeight = "205"
-                                        });
-                                }
+                                    Name = a.Name,
+                                    Country = CountryCodes.CountryNameFromTwoLetter(a.Country),
+                                    Genres = a.Genres[0].Name,
+                                    Thumb100Uri = a.Thumb100Uri,
+                                    Thumb200Uri = a.Thumb200Uri,
+                                    Thumb320Uri = a.Thumb320Uri,
+                                    Id = a.Id,
+                                    SimilarArtistCount = 1,
+                                    ItemWidth = "205",
+                                    ItemHeight = "205"
+                                });
                             }
                         }
                     }
@@ -291,34 +271,18 @@ namespace MusicExplorer
 
                         foreach (Artist a in response.Result)
                         {
-                            if (a.Thumb100Uri != null || a.Thumb200Uri != null)
+                            App.ViewModel.TopArtists.Add(new ArtistModel()
                             {
-                                App.ViewModel.TopArtists.Add(new ArtistModel()
-                                {
-                                    Name = a.Name,
-                                    Country = CountryCodes.CountryNameFromTwoLetter(a.Country),
-                                    Genres = a.Genres[0].Name,
-                                    Thumb100Uri = a.Thumb100Uri,
-                                    Thumb200Uri = a.Thumb200Uri,
-                                    Id = a.Id,
-                                    ItemWidth = "205",
-                                    ItemHeight = "205"
-                                });
-                            }
-                            else
-                            {
-                                App.ViewModel.TopArtists.Add(new ArtistModel() 
-                                    { 
-                                        Name = a.Name,
-                                        Country = CountryCodes.CountryNameFromTwoLetter(a.Country), 
-                                        Genres = a.Genres[0].Name, 
-                                        Thumb100Uri = new Uri("/Assets/thumb_100_placeholder.png", 
-                                                           UriKind.Relative), 
-                                        Id = a.Id,
-                                        ItemWidth = "205",
-                                        ItemHeight = "205"
-                                    });
-                            }
+                                Name = a.Name,
+                                Country = CountryCodes.CountryNameFromTwoLetter(a.Country),
+                                Genres = a.Genres[0].Name,
+                                Thumb100Uri = a.Thumb100Uri,
+                                Thumb200Uri = a.Thumb200Uri,
+                                Thumb320Uri = a.Thumb320Uri,
+                                Id = a.Id,
+                                ItemWidth = "205",
+                                ItemHeight = "205"
+                            });
                         }
                     }
 
@@ -379,34 +343,18 @@ namespace MusicExplorer
                                 performersString = p.Performers[0].Name;
                             }
 
-                            if (p.Thumb100Uri != null || p.Thumb200Uri != null)
+                            App.ViewModel.NewReleases.Add(new ProductModel()
                             {
-                                App.ViewModel.NewReleases.Add(new ProductModel()
-                                    {
-                                        Performers = performersString,
-                                        Name = p.Name,
-                                        Category = categoryString,
-                                        Thumb100Uri = p.Thumb100Uri,
-                                        Thumb200Uri = p.Thumb200Uri,
-                                        Id = p.Id,
-                                        ItemWidth = "205",
-                                        ItemHeight = "205"
-                                    });
-                            }
-                            else
-                            {
-                                App.ViewModel.NewReleases.Add(new ProductModel()
-                                    {
-                                        Performers = performersString,
-                                        Name = p.Name,
-                                        Category = categoryString,
-                                        Thumb100Uri = new Uri("/Assets/thumb_100_placeholder.png",
-                                                              UriKind.Relative),
-                                        Id = p.Id,
-                                        ItemWidth = "205",
-                                        ItemHeight = "205"
-                                    });
-                            }
+                                Performers = performersString,
+                                Name = p.Name,
+                                Category = categoryString,
+                                Thumb100Uri = p.Thumb100Uri,
+                                Thumb200Uri = p.Thumb200Uri,
+                                Thumb320Uri = p.Thumb320Uri,
+                                Id = p.Id,
+                                ItemWidth = "205",
+                                ItemHeight = "205"
+                            });
                         }
                     }
 
@@ -477,30 +425,16 @@ namespace MusicExplorer
 
                         foreach (Artist a in response.Result)
                         {
-                            if (a.Thumb100Uri != null || a.Thumb200Uri != null)
+                            App.ViewModel.TopArtistsForGenre.Add(new ArtistModel()
                             {
-                                App.ViewModel.TopArtistsForGenre.Add(new ArtistModel()
-                                {
-                                    Name = a.Name,
-                                    Country = CountryCodes.CountryNameFromTwoLetter(a.Country),
-                                    Genres = a.Genres[0].Name,
-                                    Thumb100Uri = a.Thumb100Uri,
-                                    Thumb200Uri = a.Thumb200Uri,
-                                    Id = a.Id
-                                });
-                            }
-                            else
-                            {
-                                App.ViewModel.TopArtistsForGenre.Add(new ArtistModel() 
-                                    { 
-                                        Name = a.Name,
-                                        Country = CountryCodes.CountryNameFromTwoLetter(a.Country), 
-                                        Genres = a.Genres[0].Name, 
-                                        Thumb100Uri = new Uri("/Assets/thumb_100_placeholder.png", 
-                                                           UriKind.Relative), 
-                                        Id = a.Id
-                                    });
-                            }
+                                Name = a.Name,
+                                Country = CountryCodes.CountryNameFromTwoLetter(a.Country),
+                                Genres = a.Genres[0].Name,
+                                Thumb100Uri = a.Thumb100Uri,
+                                Thumb200Uri = a.Thumb200Uri,
+                                Thumb320Uri = a.Thumb320Uri,
+                                Id = a.Id
+                            });
                         }
                     }
 
@@ -582,28 +516,15 @@ namespace MusicExplorer
                                 parentalAdvisoryString = "Parental advisory";
                             }
 
-                            if (m.Thumb100Uri != null || m.Thumb200Uri != null)
+                            App.ViewModel.Mixes.Add(new MixModel()
                             {
-                                App.ViewModel.Mixes.Add(new MixModel()
-                                    {
-                                        Name = m.Name,
-                                        ParentalAdvisory = parentalAdvisoryString,
-                                        Id = m.Id,
-                                        Thumb100Uri = m.Thumb100Uri,
-                                        Thumb200Uri = m.Thumb200Uri
-                                    });
-                            }
-                            else
-                            {
-                                App.ViewModel.Mixes.Add(new MixModel()
-                                {
-                                    Name = m.Name,
-                                    ParentalAdvisory = parentalAdvisoryString,
-                                    Id = m.Id,
-                                    Thumb100Uri = new Uri("/Assets/thumb_100_placeholder.png",
-                                                          UriKind.Relative), 
-                                });
-                            }
+                                Name = m.Name,
+                                ParentalAdvisory = parentalAdvisoryString,
+                                Id = m.Id,
+                                Thumb100Uri = m.Thumb100Uri,
+                                Thumb200Uri = m.Thumb200Uri,
+                                Thumb320Uri = m.Thumb320Uri
+                            });
                         }
                     }
 
@@ -673,20 +594,6 @@ namespace MusicExplorer
                                 genresString = p.Genres[0].Name;
                             }
 
-                            Uri thumb100Uri = null;
-                            Uri thumb200Uri = null;
-
-                            if (p.Thumb100Uri != null || p.Thumb200Uri != null)
-                            {
-                                thumb100Uri = p.Thumb100Uri;
-                                thumb200Uri = p.Thumb200Uri;
-                            }
-                            else
-                            {
-                                thumb100Uri = new Uri("/Assets/thumb_100_placeholder.png",
-                                                      UriKind.Relative);
-                            }
-
                             string categoryString = "Album";
 
                             if (p.Category == Category.Track)
@@ -697,8 +604,9 @@ namespace MusicExplorer
                                         Performers = performersString,
                                         Name = p.Name,
                                         Category = categoryString,
-                                        Thumb100Uri = thumb100Uri,
-                                        Thumb200Uri = thumb200Uri,
+                                        Thumb100Uri = p.Thumb100Uri,
+                                        Thumb200Uri = p.Thumb200Uri,
+                                        Thumb320Uri = p.Thumb320Uri,
                                         Id = p.Id
                                     });
                             }
@@ -710,8 +618,9 @@ namespace MusicExplorer
                                         Performers = performersString,
                                         Name = p.Name,
                                         Category = categoryString,
-                                        Thumb100Uri = thumb100Uri,
-                                        Thumb200Uri = thumb200Uri,
+                                        Thumb100Uri = p.Thumb100Uri,
+                                        Thumb200Uri = p.Thumb200Uri,
+                                        Thumb320Uri = p.Thumb320Uri,
                                         Id = p.Id
                                     });
                             }
@@ -722,8 +631,9 @@ namespace MusicExplorer
                                         Performers = performersString,
                                         Name = p.Name,
                                         Category = categoryString,
-                                        Thumb100Uri = thumb100Uri,
-                                        Thumb200Uri = thumb200Uri,
+                                        Thumb100Uri = p.Thumb100Uri,
+                                        Thumb200Uri = p.Thumb200Uri,
+                                        Thumb320Uri = p.Thumb320Uri,
                                         Id = p.Id
                                     });
                             }
@@ -778,30 +688,16 @@ namespace MusicExplorer
                     {
                         foreach (Artist a in response.Result)
                         {
-                            if (a.Thumb100Uri != null || a.Thumb200Uri != null)
+                            App.ViewModel.SimilarForArtist.Add(new ArtistModel()
                             {
-                                App.ViewModel.SimilarForArtist.Add(new ArtistModel()
-                                {
-                                    Name = a.Name,
-                                    Country = CountryCodes.CountryNameFromTwoLetter(a.Country),
-                                    Genres = a.Genres[0].Name,
-                                    Thumb100Uri = a.Thumb100Uri,
-                                    Thumb200Uri = a.Thumb200Uri,
-                                    Id = a.Id
-                                });
-                            }
-                            else
-                            {
-                                App.ViewModel.SimilarForArtist.Add(new ArtistModel() 
-                                { 
-                                    Name = a.Name,
-                                    Country = CountryCodes.CountryNameFromTwoLetter(a.Country), 
-                                    Genres = a.Genres[0].Name, 
-                                    Thumb100Uri = new Uri("/Assets/thumb_100_placeholder.png", 
-                                                       UriKind.Relative), 
-                                    Id = a.Id 
-                                });
-                            }
+                                Name = a.Name,
+                                Country = CountryCodes.CountryNameFromTwoLetter(a.Country),
+                                Genres = a.Genres[0].Name,
+                                Thumb100Uri = a.Thumb100Uri,
+                                Thumb200Uri = a.Thumb200Uri,
+                                Thumb320Uri = a.Thumb320Uri,
+                                Id = a.Id
+                            });
                         }
                     }
 

@@ -127,7 +127,28 @@ namespace MusicExplorer.Models
             }
         }
 
-        private Uri _thumbUri;
+        private Uri _thumb320Uri;
+        /// <summary>
+        /// MixModel's Thumb320Uri (320 px) property.
+        /// This property is used in the UI to display the image in Uri using a Binding.
+        /// </summary>
+        public Uri Thumb320Uri
+        {
+            get
+            {
+                return _thumb320Uri;
+            }
+            set
+            {
+                if (value != _thumb320Uri)
+                {
+                    _thumb320Uri = value;
+                    NotifyPropertyChanged("Thumb320Uri");
+                    NotifyPropertyChanged("ThumbUri");
+                }
+            }
+        }
+
         /// <summary>
         /// MixModel's ThumbUri property.
         /// This property is used in the UI to display the image in Uri using a Binding.
@@ -136,13 +157,22 @@ namespace MusicExplorer.Models
         {
             get
             {
-                if (_thumb200Uri != null)
+                if (_thumb320Uri != null)
+                {
+                    return _thumb320Uri;
+                }
+                else if (_thumb200Uri != null)
                 {
                     return _thumb200Uri;
                 }
-                else
+                else if (_thumb100Uri != null)
                 {
                     return _thumb100Uri;
+                }
+                else
+                {
+                    return new Uri("/Assets/thumb_100_placeholder.png",
+                                   UriKind.Relative);
                 }
             }
         }

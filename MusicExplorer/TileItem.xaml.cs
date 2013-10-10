@@ -48,6 +48,10 @@ namespace MusicExplorer
             else
             {
                 TileLayout.Visibility = Visibility.Visible;
+                if (NoteImage)
+                {
+                    Note.Visibility = Visibility.Visible;
+                }
             }
         }
 
@@ -133,6 +137,23 @@ namespace MusicExplorer
             set
             {
                 SetValue(ImageProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// NoteImage property for showing note image on tile.
+        /// </summary>
+        public static readonly DependencyProperty NoteImageProperty =
+            DependencyProperty.Register("NoteImage", typeof(bool), typeof(TileItem), null);
+        public bool NoteImage
+        {
+            get
+            {
+                return (bool)GetValue(NoteImageProperty);
+            }
+            set
+            {
+                SetValue(NoteImageProperty, value);
             }
         }
     }

@@ -118,7 +118,8 @@
                                                    ItemWidth="{Binding ItemWidth}"
                                                    PrimaryText="{Binding Performers}" 
                                                    SecondaryText="{Binding Name}" 
-                                                   Image="{Binding ThumbUri}"/>
+                                                   Image="{Binding ThumbUri}"
+                                                   NoteImage="True"/>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
