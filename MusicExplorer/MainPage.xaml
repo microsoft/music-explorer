@@ -53,7 +53,7 @@
                     <TextBlock Margin="12,68,0,0" FontSize="24" TextWrapping="Wrap" 
                                Text="No local songs available for creating favourites list. Favourites list shows 20 artists with the most played songs." 
                                HorizontalAlignment="Center" Visibility="{Binding NoFavouritesVisibility}"></TextBlock>
-                    <ListBox Margin="0,-38, -22,2" x:Name="LocalAudioList" ItemsSource="{Binding LocalAudio}" SelectionChanged="OnFavoriteSelectionChanged" IsHitTestVisible="False">
+                    <ListBox Margin="0,-38,-22,0" x:Name="LocalAudioList" ItemsSource="{Binding LocalAudio}" SelectionChanged="OnFavoriteSelectionChanged" IsHitTestVisible="False">
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <toolkit:WrapPanel/>
@@ -80,7 +80,7 @@
                     <TextBlock Margin="12,68,0,0" FontSize="24" TextWrapping="Wrap" 
                                Text="No local songs available for creating favourites list. Favourites list shows 20 artists with the most played songs." 
                                HorizontalAlignment="Center" Visibility="{Binding NoFavouritesVisibility}"></TextBlock>
-                    <ListBox Margin="0,-38, -22,2" x:Name="RecommendationsList" ItemsSource="{Binding Recommendations}" SelectionChanged="OnRecommendationSelectionChanged" IsHitTestVisible="False">
+                    <ListBox Margin="0,-38,-22,0" x:Name="RecommendationsList" ItemsSource="{Binding Recommendations}" SelectionChanged="OnRecommendationSelectionChanged" IsHitTestVisible="False">
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <toolkit:WrapPanel/>
@@ -104,7 +104,7 @@
             <!--What's New Item-->
             <phone:PanoramaItem Margin="0,0,0,30">
                 <Grid>
-                    <ListBox Margin="0,-38, -22,2" x:Name="NewReleasesList" ItemsSource="{Binding NewReleases}" SelectionChanged="OnNewReleasesSelectionChanged">
+                    <ListBox Margin="0,-38,-22,0" x:Name="NewReleasesList" ItemsSource="{Binding NewReleases}" SelectionChanged="OnNewReleasesSelectionChanged">
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <toolkit:WrapPanel/>
@@ -129,7 +129,7 @@
             <!--Who's Hot Item-->
             <phone:PanoramaItem Margin="0,0,0,30">
                 <Grid>
-                    <ListBox Margin="0,-38, -22,2" x:Name="TopArtistsList" ItemsSource="{Binding TopArtists}" SelectionChanged="OnTopArtistsSelectionChanged">
+                    <ListBox Margin="0,-38,-22,0" x:Name="TopArtistsList" ItemsSource="{Binding TopArtists}" SelectionChanged="OnTopArtistsSelectionChanged">
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <toolkit:WrapPanel/>
@@ -152,7 +152,7 @@
             
             <!--Genres Item-->
             <phone:PanoramaItem Margin="0,0,0,30">
-                <phone:LongListSelector x:Name="GenresList" Margin="0,-38,-22,2" ItemsSource="{Binding Genres}" SelectionChanged="OnGenresSelectionChanged" toolkit:TiltEffect.IsTiltEnabled="True">
+                <phone:LongListSelector Margin="0,-38,-22,0" x:Name="GenresList" ItemsSource="{Binding Genres}" SelectionChanged="OnGenresSelectionChanged" toolkit:TiltEffect.IsTiltEnabled="True">
                     <phone:LongListSelector.ListHeaderTemplate>
                         <DataTemplate>
                             <Grid Margin="12,0,0,20">
@@ -183,7 +183,7 @@
 
             <!--Mixes Item-->
             <phone:PanoramaItem Margin="0,0,0,30">
-                <phone:LongListSelector x:Name="MixGroupsList" Margin="0,-38,-22,2" ItemsSource="{Binding MixGroups}" SelectionChanged="OnMixGroupsSelectionChanged" toolkit:TiltEffect.IsTiltEnabled="True">
+                <phone:LongListSelector Margin="0,-38,-22,0" x:Name="MixGroupsList" ItemsSource="{Binding MixGroups}" SelectionChanged="OnMixGroupsSelectionChanged" toolkit:TiltEffect.IsTiltEnabled="True">
                     <phone:LongListSelector.ListHeaderTemplate>
                         <DataTemplate>
                             <Grid Margin="12,0,0,20">

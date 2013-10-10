@@ -150,6 +150,17 @@ namespace MusicExplorer
                     App.ViewModel.NoRecommendedVisibility = Visibility.Collapsed;
                 }
 
+                // limit the number of recommended artists to 20
+                if (localArtists.Count == recommendResponses)
+                {
+                    int i = App.ViewModel.Recommendations.Count - 1;
+                    while (i > 20)
+                    {
+                        App.ViewModel.Recommendations.RemoveAt(i);
+                        i--;
+                    }
+                }
+
                 return;
             }
 

@@ -422,16 +422,16 @@ namespace MusicExplorer.Models
             // Divide local artists into two "size categories"
             foreach (ArtistModel m in App.ViewModel.LocalAudio)
             {
-                if (m.Name == "TitlePlaceholder") continue;
+                if (m.Name.Contains("TitlePlaceholder")) continue;
                 if (Convert.ToInt16(m.LocalTrackCount) > (totalTrackCount / totalArtistCount))
                 {
-                    m.ItemHeight = "200";
-                    m.ItemWidth = "206";
+                    m.ItemHeight = "205";
+                    m.ItemWidth = "205";
                 }
                 else
                 {
-                    m.ItemHeight = "100";
-                    m.ItemWidth = "206";
+                    m.ItemHeight = "102";
+                    m.ItemWidth = "205";
                 }
             }
 
