@@ -53,6 +53,19 @@ namespace MusicExplorer
                     Note.Visibility = Visibility.Visible;
                 }
             }
+
+            // Special case - wrap text if primary and secondary texts are same
+            if (PrimaryText.Equals(SecondaryText))
+            {
+                double rightMargin = 10.0;
+                if (Note.Visibility == Visibility.Visible)
+                {
+                    rightMargin += Note.ActualWidth;
+                }
+                SecondaryTextBlock.Visibility = Visibility.Collapsed;
+                PrimaryTextBlock.Margin = new Thickness(4, 0, rightMargin, 0);
+                PrimaryTextBlock.TextWrapping = TextWrapping.Wrap;
+            }
         }
 
         /// <summary>

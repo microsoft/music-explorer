@@ -536,7 +536,9 @@ namespace MusicExplorer
                                 Id = m.Id,
                                 Thumb100Uri = m.Thumb100Uri,
                                 Thumb200Uri = m.Thumb200Uri,
-                                Thumb320Uri = m.Thumb320Uri
+                                Thumb320Uri = m.Thumb320Uri,
+                                ItemWidth = "205",
+                                ItemHeight = "205"
                             });
                         }
                     }

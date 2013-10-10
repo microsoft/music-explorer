@@ -177,6 +177,47 @@ namespace MusicExplorer.Models
             }
         }
 
+        private string _itemWidth;
+        /// <summary>
+        /// Mix's itemWidth property.
+        /// This property is used when determining width of the mix item.
+        /// </summary>
+        public string ItemWidth
+        {
+            get
+            {
+                return _itemWidth;
+            }
+            set
+            {
+                if (value != _itemWidth)
+                {
+                    _itemWidth = value;
+                    NotifyPropertyChanged("ItemWidth");
+                }
+            }
+        }
+
+        private string _itemHeight;
+        /// <summary>
+        /// Mix's ItemWidth property.
+        /// This property is used when determining height of the mix item.
+        /// </summary>
+        public string ItemHeight
+        {
+            get
+            {
+                return _itemHeight;
+            }
+            set
+            {
+                if (value != _itemHeight)
+                {
+                    _itemHeight = value;
+                    NotifyPropertyChanged("ItemHeight");
+                }
+            }
+        }
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName)
         {

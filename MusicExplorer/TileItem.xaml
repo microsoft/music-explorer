@@ -30,11 +30,11 @@
 
             <Image Margin="12,0,0,4" HorizontalAlignment="Center" Source="{Binding ElementName=TileControl, Path=Image}"/>
 
-            <StackPanel Background="#AA000000" Orientation="Horizontal" Margin="12,0,0,8" VerticalAlignment="Bottom">
+            <StackPanel Background="#AA000000" Orientation="Horizontal" Margin="12,0,0,8" VerticalAlignment="Bottom" Height="54">
                 <Image x:Name="Note" Width="30" Height="30" VerticalAlignment="Center" Margin="0,0,0,0" Source="Assets/music_explorer_note.png" Visibility="Collapsed"/>
-                <StackPanel Margin="0,0,0,0" Orientation="Vertical" Width="{Binding ElementName=TileControl, Path=ItemWidth}">
-                    <TextBlock Text="{Binding ElementName=TileControl, Path=PrimaryText}" Margin="4,0" Style="{StaticResource PhoneTextNormalStyle}"/>
-                    <TextBlock Text="{Binding ElementName=TileControl, Path=SecondaryText}" Margin="4,0" Style="{StaticResource PhoneTextNormalStyle}" Loaded="OnLoaded"/>
+                <StackPanel Margin="0,0,0,0" Orientation="Vertical" Width="{Binding ElementName=TileControl, Path=ItemWidth}" VerticalAlignment="Center">
+                    <TextBlock x:Name="PrimaryTextBlock" Text="{Binding ElementName=TileControl, Path=PrimaryText}" Margin="4,0" Style="{StaticResource PhoneTextNormalStyle}"/>
+                    <TextBlock x:Name="SecondaryTextBlock" Text="{Binding ElementName=TileControl, Path=SecondaryText}" Margin="4,0" Style="{StaticResource PhoneTextNormalStyle}" Loaded="OnLoaded"/>
                 </StackPanel>
             </StackPanel>
         </Grid>

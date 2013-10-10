@@ -243,7 +243,7 @@ namespace MusicExplorer.Models
         private string _itemWidth;
         /// <summary>
         /// Product's itemWidth property.
-        /// This property is used when determining width of the product list item.
+        /// This property is used when determining width of the product item.
         /// </summary>
         public string ItemWidth
         {
@@ -264,7 +264,7 @@ namespace MusicExplorer.Models
         private string _itemHeight;
         /// <summary>
         /// Product's ItemWidth property.
-        /// This property is used when determining height of the product list item.
+        /// This property is used when determining height of the product item.
         /// </summary>
         public string ItemHeight
         {
