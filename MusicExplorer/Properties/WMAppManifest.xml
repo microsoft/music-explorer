@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2012/deployment" AppPlatformVersion="8.0">
   <DefaultLanguage xmlns="" code="en-US" />
-  <App xmlns="" ProductID="{2926895d-90c8-4dd8-99aa-8f9b3ece4dc6}" Title="Music Explorer" RuntimeType="Silverlight" Version="1.0.1.0" Genre="apps.normal" Author="MusicExplorer author" Description="Music Explorer is a Nokia Developer example application demonstrating the use of Nokia Music API together with standard Windows Phone 8 audio features to create an immersive music experience." Publisher="MusicExplorer" PublisherID="{a93f1abf-70c8-4aad-bc38-b49742da761a}">
+  <App xmlns="" ProductID="{2926895d-90c8-4dd8-99aa-8f9b3ece4dc6}" Title="Music Explorer" RuntimeType="Silverlight" Version="1.1.0.0" Genre="apps.normal" Author="Nokia Corporation" Description="Music Explorer is a Nokia Developer example application demonstrating the use of Nokia Music API together with standard Windows Phone 8 audio features to create an immersive music experience." Publisher="Nokia Developer" PublisherID="{a93f1abf-70c8-4aad-bc38-b49742da761a}">
     <IconPath IsRelative="true" IsResource="false">Assets\ApplicationIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING" />
@@ -44,7 +44,7 @@
       <ScreenResolution Name="ID_RESOLUTION_HD720P" />
     </ScreenResolutions>
     <FunctionalCapabilities>
-      <FunctionalCapability Name="ID_FUNCCAP_EXTEND_MEM"/>
+      <FunctionalCapability Name="ID_FUNCCAP_EXTEND_MEM" />
     </FunctionalCapabilities>
   </App>
 </Deployment>

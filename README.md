@@ -87,7 +87,7 @@ Music API related features by trying out the application.
 
 * Windows Phone 8
 
-Tested to work on Nokia Lumia 920. 
+Tested to work on Nokia Lumia 920 and Nokia Lumia 1520. 
 Developed with Microsoft Visual Studio Express for Windows Phone 2012.
 
 4.1 Required Capabilities
@@ -115,25 +115,16 @@ None.
 Make sure you have the following installed:
  * Windows 8
  * Windows Phone SDK 8.0
- * NuGet 2.1 (https://nuget.org/), Visual Studio extension to install and 
-   update third-party libraries and tools in Visual Studio
+ * Latest NuGet Package Manager (>2.7.1) from https://nuget.org/ to enable 
+   NuGet Package Restore
 
 5.2 Using the WINDOWS PHONE 8 SDK
 ---------------------------------
 
 1. Open the SLN file:
    File > Open Project, select the file MusicExplorer.sln
-2. Install Silverlight Toolkit for the project.
-  * Right click References in Solution Explorer -> select Manage NuGet Packages
-  * Search for 'wptoolkit' and install the 'Windows Phone toolkit' package 
-3. Install Nokia Music API for the project.
-  * Right click References in Solution Explorer -> select Manage NuGet Packages
-  * Search for 'nokia music' and install the 'Nokia Music' package 
-4. Install Json.NET for the project.
-  * Right click References in Solution Explorer -> select Manage NuGet Packages
-  * Search for 'json' and install the 'Json.NET' package 
-5. Select the target 'Emulator WXGA'.
-6. Press F5 to build the project and run it on the Windows Phone Emulator.
+2. Select the target 'Emulator WXGA'.
+3. Press F5 to build the project and run it on the Windows Phone Emulator.
 
 5.3 Deploying to Windows Phone 8
 --------------------------------
@@ -191,14 +182,21 @@ http://msdn.microsoft.com/en-us/library/gg588378%28v=vs.92%29.aspx
 7. Related documentation
 -------------------------------------------------------------------------------
 
-An article "Nokia Music API" published on Nokia Lumia Developer's Library
+"Nokia Music API" documentation published on Nokia Lumia Developer's Library
 (http://www.developer.nokia.com/Resources/Library/Lumia/#!nokia-music-api.html) 
 describes the properties and usage of Nokia Music API in detail.
 
+“Optimising for Nokia phablets” documentation on Nokia Lumia Developer's Library
+(http://developer.nokia.com/Resources/Library/Lumia/#!optimising-for-nokia-phablets.html)
+describes how to optimize applications for large screen, different aspect 
+ratios, and multiple resolutions. 
 
 8. Version history
 -------------------------------------------------------------------------------
 
+* 1.1.0.0 Major UI-rework (new tile based design replacing list based design,
+          utilizing images of higher resolution in 1080p devices and NuGet 
+          package restore support.
 * 1.0.1.0 Bug fix to handle exception when location is set off
 * 1.0.0.0 First release
 * 0.4.0.0 Minor fixes

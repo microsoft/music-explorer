@@ -160,7 +160,7 @@ namespace MusicExplorer.Models
         {
             get
             {
-                if (_thumb320Uri != null)
+                if (_thumb320Uri != null && ResolutionHelper.CurrentResolution == Resolutions.HD1080p)
                 {
                     return _thumb320Uri;
                 }
