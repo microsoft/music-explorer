@@ -12,7 +12,7 @@ The example has been developed with Silverlight for Windows Phone devices
 and tested to work on Nokia Lumia devices with Windows Phone 8.
 
 This example application is hosted in GitHub:
-https://github.com/nokia-developer/music-explorer
+https://github.com/Microsoft/music-explorer
 
 For more information on implementation and porting, visit Nokia Lumia
 Developer's Library:
