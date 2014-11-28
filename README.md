@@ -9,12 +9,12 @@ releases, and it also shows how to launch Nokia Music application from within
 another application to play mix radio or show artist/product information.  
 
 The example has been developed with Silverlight for Windows Phone devices
-and tested to work on Nokia Lumia devices with Windows Phone 8.
+and tested to work on Lumia devices with Windows Phone 8.
 
 This example application is hosted in GitHub:
 https://github.com/Microsoft/music-explorer
 
-For more information on implementation and porting, visit Nokia Lumia
+For more information on implementation and porting, visit Lumia
 Developer's Library:
 http://developer.nokia.com/Resources/Library/Lumia/#!code-examples/music-explorer.html
 
@@ -147,7 +147,7 @@ See the license text file delivered with this project.
 (http://www.developer.nokia.com/Resources/Library/Lumia/#!nokia-music-api.html) 
 describes the properties and usage of Nokia Music API in detail.
 
-ìOptimising for Nokia phabletsî documentation on Nokia Lumia Developer's Library
+‚ÄúOptimising for Nokia phablets‚Äù documentation on Nokia Lumia Developer's Library
 (http://developer.nokia.com/Resources/Library/Lumia/#!optimising-for-nokia-phablets.html)
 describes how to optimize applications for large screen, different aspect 
 ratios, and multiple resolutions. 
