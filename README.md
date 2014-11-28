@@ -8,6 +8,8 @@ such as searching for artists by name and requesting top artists and new
 releases, and it also shows how to launch Nokia Music application from within
 another application to play mix radio or show artist/product information.  
 
+![Full panorama](/doc/screenshots/me_panorama_full_small.png?raw?true)
+
 The example has been developed with Silverlight for Windows Phone devices
 and tested to work on Lumia devices with Windows Phone 8.
 
