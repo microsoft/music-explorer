@@ -1,23 +1,22 @@
 Music Explorer
 ==============
 
-Music Explorer is an example application demonstrating the use of Nokia Music
-API together with standard Windows Phone 8 audio features to create an immersive
-music experience. It shows how to take advantage of Nokia Music API features
-such as searching for artists by name and requesting top artists and new
-releases, and it also shows how to launch Nokia Music application from within
-another application to play mix radio or show artist/product information.  
+Music Explorer is an example application demonstrating how the Nokia Music
+API can be used together with standard Windows Phone 8 audio features to create an
+immersive music experience. It shows how to take advantage of Nokia Music API
+features such as searching for artists by name and requesting top artists or new
+releases. It also shows how to launch the Nokia Music application from within
+another application in order to play mix radio or show artist/product information.
 
 ![Full panorama](/doc/screenshots/me_panorama_full_small.png?raw?true)
 
-The example has been developed with Silverlight for Windows Phone devices
-and tested to work on Lumia devices with Windows Phone 8.
+This example has been developed with Silverlight for Windows Phone and has been
+tested to work on Lumia devices running Windows Phone 8.
 
-This example application is hosted in GitHub:
+This example application is hosted on GitHub:
 https://github.com/Microsoft/music-explorer
 
-For more information on implementation and porting, visit Lumia
-Developer's Library:
+For more information on implementation and porting, visit the Lumia Developer's Library:
 http://developer.nokia.com/Resources/Library/Lumia/#!code-examples/music-explorer.html
 
 
@@ -38,7 +37,7 @@ Music API related features by trying out the application.
   third-party libraries and tools in Visual Studio
 
 
-3. Project structure and implementation
+3. Project Structure and Implementation
 -------------------------------------------------------------------------------
 
 3.1 Folders
@@ -52,7 +51,7 @@ Music API related features by trying out the application.
 * `Resources`: Application resources.
 * `Models`: `MainViewModel` and models to bind data and user interface.
 
-3.2 Important files and classes
+3.2 Important Files and Classes
 -------------------------------
 
 | File | Description |
@@ -120,7 +119,7 @@ Make sure you have the following installed:
  * Latest NuGet Package Manager (>2.7.1) from https://nuget.org/ to enable 
    NuGet Package Restore
 
-5.2 Using the WINDOWS PHONE 8 SDK
+5.2 Using the Windows Phone 8 SDK
 ---------------------------------
 
 1. Open the SLN file:
